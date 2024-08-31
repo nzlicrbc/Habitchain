@@ -1,9 +1,9 @@
 package com.example.habitchain.data.api
 
-import com.example.habitchain.data.model.Quote
+import com.example.habitchain.data.model.QuoteResponse
 import retrofit2.http.GET
 
 interface QuoteApiService {
-    @GET("/api/v3/quotes/random")
-    suspend fun getRandomQuote(): Quote
+    @GET("random")
+    suspend fun getRandomQuote(): QuoteResponse
 }
