@@ -29,6 +29,9 @@ ksp = "1.9.22-1.0.16"
 hiltCommon = "1.2.0"
 hiltWork = "1.2.0"
 okhttp = "4.10.0"
+adapters = "3.2.0-alpha11"
+securityCryptoKtx = "1.1.0-alpha06"
+mpandroidchart = "v3.1.0"
 
 [libraries]
 androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
@@ -64,6 +67,9 @@ androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.
 androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+androidx-adapters = { group = "androidx.databinding", name = "adapters", version.ref = "adapters" }
+androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "securityCryptoKtx" }
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
