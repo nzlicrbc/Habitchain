@@ -1,7 +1,7 @@
 package com.example.habitchain.data.model
 
 data class User(
-    val id: String,
+    val uid: String,
     val email: String,
-    val displayName: String?
+    val displayName: String? = null
 )
