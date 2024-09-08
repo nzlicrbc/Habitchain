@@ -1,12 +1,14 @@
 package com.example.habitchain.ui.auth
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.airbnb.lottie.LottieCompositionFactory
 import com.example.habitchain.R
 import com.example.habitchain.databinding.FragmentLoginBinding
 import com.google.android.material.snackbar.Snackbar
@@ -16,7 +18,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
-
     private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -27,9 +28,10 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.lottieAnimationView.setAnimation(R.raw.login3)
+        binding.lottieAnimationView.playAnimation()
         setupClickListeners()
         observeAuthState()
-        observeRememberMe()
     }
 
     private fun setupClickListeners() {
@@ -42,27 +44,6 @@ class LoginFragment : Fragment() {
         }
 
         binding.textViewSignUp.setOnClickListener {
-            val email = binding.editTextEmail.text.toString()
-            val password = binding.editTextPassword.text.toString()
-            if (validateInput(email, password)) {
-                viewModel.signUp(email, password)
-            }
-        }
-
-        binding.textViewForgotPassword.setOnClickListener {
-            val email = binding.editTextEmail.text.toString()
-            if (email.isNotBlank()) {
-                viewModel.resetPassword(email)
-            } else {
-                showErrorMessage("Lütfen şifresini sıfırlamak istediğiniz hesabın e-posta adresini girin.")
-            }
-        }
-
-        binding.checkBoxRememberMe.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.setRememberMe(isChecked)
-        }
-
-        binding.textViewSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
     }
@@ -71,7 +52,7 @@ class LoginFragment : Fragment() {
         viewModel.authenticationState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is LoginViewModel.AuthState.Authenticated -> {
-                    findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                    findNavController().navigate(R.id.action_loginFragment_to_navigation_home)
                 }
                 is LoginViewModel.AuthState.Error -> {
                     showErrorMessage(state.message)
@@ -83,16 +64,7 @@ class LoginFragment : Fragment() {
                 is LoginViewModel.AuthState.Unauthenticated -> {
                     showLoading(false)
                 }
-                is LoginViewModel.AuthState.PasswordResetSent -> {
-                    showMessage("Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.")
-                }
             }
-        }
-    }
-
-    private fun observeRememberMe() {
-        viewModel.rememberMe.observe(viewLifecycleOwner) { isRemembered ->
-            binding.checkBoxRememberMe.isChecked = isRemembered
         }
     }
 
@@ -123,7 +95,5 @@ class LoginFragment : Fragment() {
     private fun showLoading(isLoading: Boolean) {
         binding.buttonLogin.isEnabled = !isLoading
         binding.textViewSignUp.isEnabled = !isLoading
-        binding.textViewForgotPassword.isEnabled = !isLoading
-        binding.checkBoxRememberMe.isEnabled = !isLoading
     }
 }
