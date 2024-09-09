@@ -42,7 +42,8 @@ interface HabitDao {
         WHERE completion_date >= :startDate
         GROUP BY day_of_week
         ORDER BY day_of_week
-    """)
+    """
+    )
     suspend fun getHabitCompletionsForLastWeek(startDate: Long): List<DayCompletion>
 
     @Insert
