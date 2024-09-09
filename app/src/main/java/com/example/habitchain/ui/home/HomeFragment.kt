@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -30,7 +29,11 @@ class HomeFragment : Fragment() {
     private lateinit var habitAdapter: HabitAdapter
     private lateinit var weekAdapter: WeekAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -55,8 +58,10 @@ class HomeFragment : Fragment() {
         val weeks = createWeeks()
         val today = Calendar.getInstance()
         val currentWeekIndex = weeks.indexOfFirst { week ->
-            week.any { it.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
-                    it.get(Calendar.YEAR) == today.get(Calendar.YEAR) }
+            week.any {
+                it.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
+                        it.get(Calendar.YEAR) == today.get(Calendar.YEAR)
+            }
         }
 
         weekAdapter = WeekAdapter(weeks) { selectedDate ->
@@ -80,7 +85,8 @@ class HomeFragment : Fragment() {
         val dateFormat = SimpleDateFormat("MMMM d", Locale.getDefault())
 
         val displayText = if (selectedDate.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
-            selectedDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
+            selectedDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
+        ) {
             "Today"
         } else {
             dateFormat.format(selectedDate.time)
@@ -113,7 +119,8 @@ class HomeFragment : Fragment() {
     private fun setupRecyclerView() {
         habitAdapter = HabitAdapter(
             onItemClicked = { habit ->
-                val action = HomeFragmentDirections.actionNavigationHomeToHabitProgressFragment(habit.id)
+                val action =
+                    HomeFragmentDirections.actionNavigationHomeToHabitProgressFragment(habit.id)
                 findNavController().navigate(action)
             },
             onCompletionToggled = { habit, isCompleted ->
@@ -136,7 +143,8 @@ class HomeFragment : Fragment() {
             },
             onEditClicked = { position ->
                 val habit = habitAdapter.currentList[position]
-                val action = HomeFragmentDirections.actionNavigationHomeToAddEditHabitFragment(habit.id)
+                val action =
+                    HomeFragmentDirections.actionNavigationHomeToAddEditHabitFragment(habit.id)
                 findNavController().navigate(action)
             }
         )
@@ -151,7 +159,8 @@ class HomeFragment : Fragment() {
     private fun setupObservers() {
         viewModel.habits.observe(viewLifecycleOwner) { habits ->
             habitAdapter.submitList(habits)
-            binding.recyclerViewHabits.visibility = if (habits.isEmpty()) View.GONE else View.VISIBLE
+            binding.recyclerViewHabits.visibility =
+                if (habits.isEmpty()) View.GONE else View.VISIBLE
         }
 
         viewModel.quote.observe(viewLifecycleOwner) { quote ->
@@ -184,16 +193,19 @@ class HomeFragment : Fragment() {
                     binding.textViewAll.text = "All"
                     true
                 }
+
                 R.id.filter_active -> {
                     viewModel.filterHabits("Active")
                     binding.textViewAll.text = "Active"
                     true
                 }
+
                 R.id.filter_completed -> {
                     viewModel.filterHabits("Completed")
                     binding.textViewAll.text = "Completed"
                     true
                 }
+
                 else -> false
             }
         }
