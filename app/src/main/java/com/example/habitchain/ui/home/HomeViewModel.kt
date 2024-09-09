@@ -8,6 +8,12 @@ import com.example.habitchain.data.model.Habit
 import com.example.habitchain.data.model.Quote
 import com.example.habitchain.data.repository.HabitRepository
 import com.example.habitchain.data.repository.QuoteRepository
+import com.example.habitchain.utils.Constants.ERROR_DELETE_HABIT
+import com.example.habitchain.utils.Constants.ERROR_FETCH_HABITS
+import com.example.habitchain.utils.Constants.ERROR_FETCH_QUOTE
+import com.example.habitchain.utils.Constants.FILTER_TEXT_ACTIVE
+import com.example.habitchain.utils.Constants.FILTER_TEXT_ALL
+import com.example.habitchain.utils.Constants.FILTER_TEXT_COMPLETED
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -32,7 +38,7 @@ class HomeViewModel @Inject constructor(
     private val _selectedDate = MutableLiveData<Calendar>()
     val selectedDate: LiveData<Calendar> = _selectedDate
 
-    private var currentFilter = "All"
+    private var currentFilter = FILTER_TEXT_ALL
 
     init {
         fetchHabits()
@@ -52,7 +58,7 @@ class HomeViewModel @Inject constructor(
                 val filteredAndResetHabits = filterAndResetHabits(habits)
                 _habits.value = filterHabitsList(filteredAndResetHabits)
             } catch (e: Exception) {
-                _error.value = "Failed to fetch habits: ${e.message}"
+                _error.value = "$ERROR_FETCH_HABITS ${e.message}"
             }
         }
     }
@@ -82,7 +88,7 @@ class HomeViewModel @Inject constructor(
                 habitRepository.updateHabitCompletion(habitId, completed)
                 fetchHabits()
             } catch (e: Exception) {
-                _error.value = "Alışkanlık güncellenirken hata oluştu: ${e.message}"
+                _error.value = "$ERROR_FETCH_HABITS ${e.message}"
             }
         }
     }
@@ -93,8 +99,8 @@ class HomeViewModel @Inject constructor(
                 val randomQuote = quoteRepository.getRandomQuote()
                 _quote.value = randomQuote
             } catch (e: Exception) {
-                _error.value = "Failed to fetch quote: ${e.message}"
-                _quote.value = Quote("Failed to fetch quote", "Error")
+                _error.value = "$ERROR_FETCH_QUOTE: ${e.message}"
+                _quote.value = Quote(ERROR_FETCH_QUOTE, "Error")
             }
         }
     }
@@ -106,9 +112,9 @@ class HomeViewModel @Inject constructor(
 
     private fun filterHabitsList(habits: List<Habit>): List<Habit> {
         return when (currentFilter) {
-            "All" -> habits
-            "Active" -> habits.filter { !it.isCompleted }
-            "Completed" -> habits.filter { it.isCompleted }
+            FILTER_TEXT_ALL -> habits
+            FILTER_TEXT_ACTIVE -> habits.filter { !it.isCompleted }
+            FILTER_TEXT_COMPLETED -> habits.filter { it.isCompleted }
             else -> habits
         }
     }
@@ -119,7 +125,7 @@ class HomeViewModel @Inject constructor(
                 habitRepository.deleteHabit(habitId)
                 fetchHabits()
             } catch (e: Exception) {
-                _error.value = "Failed to delete habit: ${e.message}"
+                _error.value = "$ERROR_DELETE_HABIT: ${e.message}"
             }
         }
     }

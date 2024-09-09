@@ -4,8 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.example.habitchain.data.Converters
+import com.example.habitchain.utils.Constants.TABLE_NAME_HABITS
 
-@Entity(tableName = "habits")
+@Entity(tableName = TABLE_NAME_HABITS)
 data class Habit(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,

@@ -15,6 +15,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.habitchain.R
 import com.example.habitchain.databinding.FragmentHomeBinding
 import com.example.habitchain.ui.habits.HabitAdapter
+import com.example.habitchain.utils.Constants.FILTER_TEXT_ACTIVE
+import com.example.habitchain.utils.Constants.FILTER_TEXT_ALL
+import com.example.habitchain.utils.Constants.FILTER_TEXT_COMPLETED
 import com.example.habitchain.utils.SwipeActionCallback
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -189,20 +192,20 @@ class HomeFragment : Fragment() {
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.filter_all -> {
-                    viewModel.filterHabits("All")
-                    binding.textViewAll.text = "All"
+                    viewModel.filterHabits(FILTER_TEXT_ALL)
+                    binding.textViewAll.text = FILTER_TEXT_ALL
                     true
                 }
 
                 R.id.filter_active -> {
-                    viewModel.filterHabits("Active")
-                    binding.textViewAll.text = "Active"
+                    viewModel.filterHabits(FILTER_TEXT_ACTIVE)
+                    binding.textViewAll.text = FILTER_TEXT_ACTIVE
                     true
                 }
 
                 R.id.filter_completed -> {
-                    viewModel.filterHabits("Completed")
-                    binding.textViewAll.text = "Completed"
+                    viewModel.filterHabits(FILTER_TEXT_COMPLETED)
+                    binding.textViewAll.text = FILTER_TEXT_COMPLETED
                     true
                 }
 

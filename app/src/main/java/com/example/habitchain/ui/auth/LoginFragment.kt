@@ -9,6 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.habitchain.R
 import com.example.habitchain.databinding.FragmentLoginBinding
+import com.example.habitchain.utils.Constants.ERROR_EMPTY_FIELDS
+import com.example.habitchain.utils.Constants.ERROR_INVALID_EMAIL
+import com.example.habitchain.utils.Constants.ERROR_PASSWORD_LENGTH
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -75,15 +78,15 @@ class LoginFragment : Fragment() {
 
     private fun validateInput(email: String, password: String): Boolean {
         if (email.isBlank() || password.isBlank()) {
-            showErrorMessage("Email ve şifre boş olamaz")
+            showErrorMessage(ERROR_EMPTY_FIELDS)
             return false
         }
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            showErrorMessage("Geçerli bir email adresi girin")
+            showErrorMessage(ERROR_INVALID_EMAIL)
             return false
         }
         if (password.length < 6) {
-            showErrorMessage("Şifre en az 6 karakter olmalıdır")
+            showErrorMessage(ERROR_PASSWORD_LENGTH)
             return false
         }
         return true

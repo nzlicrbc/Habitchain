@@ -8,6 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.habitchain.databinding.FragmentRegisterBinding
+import com.example.habitchain.utils.Constants.ERROR_FIELDS_BLANK
+import com.example.habitchain.utils.Constants.ERROR_INVALID_EMAIL
+import com.example.habitchain.utils.Constants.ERROR_PASSWORDS_MISMATCH
+import com.example.habitchain.utils.Constants.ERROR_PASSWORD_LENGTH
+import com.example.habitchain.utils.Constants.SUCCESS_REGISTRATION
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -54,7 +59,7 @@ class RegisterFragment : Fragment() {
         viewModel.registrationState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is RegisterViewModel.RegistrationState.Success -> {
-                    showMessage("Kayıt başarılı! Giriş yapabilirsiniz.")
+                    showMessage(SUCCESS_REGISTRATION)
                     findNavController().navigateUp()
                 }
 
@@ -75,19 +80,19 @@ class RegisterFragment : Fragment() {
         confirmPassword: String
     ): Boolean {
         if (username.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-            showErrorMessage("Tüm alanları doldurun")
+            showErrorMessage(ERROR_FIELDS_BLANK)
             return false
         }
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            showErrorMessage("Geçerli bir email adresi girin")
+            showErrorMessage(ERROR_INVALID_EMAIL)
             return false
         }
         if (password.length < 6) {
-            showErrorMessage("Şifre en az 6 karakter olmalıdır")
+            showErrorMessage(ERROR_PASSWORD_LENGTH)
             return false
         }
         if (password != confirmPassword) {
-            showErrorMessage("Şifreler eşleşmiyor")
+            showErrorMessage(ERROR_PASSWORDS_MISMATCH)
             return false
         }
         return true

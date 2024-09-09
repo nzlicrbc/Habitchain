@@ -21,6 +21,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.habitchain.R
 import com.example.habitchain.databinding.ActivityMainBinding
 import com.example.habitchain.data.repository.UserRepository
+import com.example.habitchain.utils.Constants.CHANNEL_ID
 import dagger.hilt.android.AndroidEntryPoint
 import com.google.firebase.FirebaseApp
 import javax.inject.Inject
@@ -125,9 +126,5 @@ class MainActivity : AppCompatActivity() {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
-    }
-
-    companion object {
-        const val CHANNEL_ID = "HabitChainChannel"
     }
 }

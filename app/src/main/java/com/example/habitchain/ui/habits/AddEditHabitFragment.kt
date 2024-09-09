@@ -17,11 +17,18 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.habitchain.R
 import com.example.habitchain.data.model.Habit
 import com.example.habitchain.databinding.FragmentAddEditHabitBinding
+import com.example.habitchain.utils.Constants.ERROR_GOAL_INVALID
+import com.example.habitchain.utils.Constants.ERROR_NAME_EMPTY
+import com.example.habitchain.utils.Constants.ERROR_SAVING_HABIT
+import com.example.habitchain.utils.Constants.ERROR_UNIT_EMPTY
+import com.example.habitchain.utils.Constants.SUCCESS_HABIT_SAVED
+import com.example.habitchain.utils.Constants.TIME_PICKER_TITLE
 import com.google.android.material.chip.Chip
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @AndroidEntryPoint
 class AddEditHabitFragment : Fragment() {
@@ -49,8 +56,8 @@ class AddEditHabitFragment : Fragment() {
         setupUI()
         observeViewModel()
 
-        if (args.habitId != -1) {
-            viewModel.loadHabit(args.habitId)
+        if (args.habitId != null) {
+            viewModel.loadHabit(args.habitId!!)
         }
     }
 
@@ -173,11 +180,11 @@ class AddEditHabitFragment : Fragment() {
             .setTimeFormat(TimeFormat.CLOCK_24H)
             .setHour(12)
             .setMinute(0)
-            .setTitleText("Set reminder time")
+            .setTitleText(TIME_PICKER_TITLE)
             .build()
 
         picker.addOnPositiveButtonClickListener {
-            val selectedTime = String.format("%02d:%02d", picker.hour, picker.minute)
+            val selectedTime = String.format(Locale.getDefault(), "%02d:%02d", picker.hour, picker.minute)
             viewModel.addReminder(selectedTime)
         }
 
@@ -187,17 +194,17 @@ class AddEditHabitFragment : Fragment() {
     private fun saveHabit() {
         val name = binding.editTextHabitName.text.toString().trim()
         if (name.isEmpty()) {
-            binding.editTextHabitName.error = "Name cannot be empty"
+            binding.editTextHabitName.error = ERROR_NAME_EMPTY
             return
         }
         val goal = binding.editTextGoal.text.toString().toIntOrNull() ?: 0
         if (goal <= 0) {
-            binding.editTextGoal.error = "Goal must be a positive number"
+            binding.editTextGoal.error = ERROR_GOAL_INVALID
             return
         }
         val unit = binding.editTextUnit.text.toString().trim()
         if (unit.isEmpty()) {
-            binding.editTextUnit.error = "Unit cannot be empty"
+            binding.editTextUnit.error = ERROR_UNIT_EMPTY
             return
         }
         val frequency = binding.spinnerGoalPeriod.selectedItem.toString()
@@ -244,7 +251,7 @@ class AddEditHabitFragment : Fragment() {
             viewModel.habitAdded.collect { habit ->
                 Toast.makeText(
                     context,
-                    "Habit '${habit.name}' saved successfully",
+                    SUCCESS_HABIT_SAVED.format(habit.name),
                     Toast.LENGTH_SHORT
                 ).show()
                 findNavController().navigate(R.id.action_addEditHabitFragment_to_navigation_home)
@@ -253,7 +260,7 @@ class AddEditHabitFragment : Fragment() {
 
         viewModel.saveComplete.observe(viewLifecycleOwner) { saved ->
             if (!saved) {
-                Toast.makeText(context, "Error saving habit", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, ERROR_SAVING_HABIT, Toast.LENGTH_SHORT).show()
             }
         }
 

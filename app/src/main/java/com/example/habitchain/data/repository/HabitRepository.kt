@@ -1,6 +1,5 @@
 package com.example.habitchain.data.repository
 
-import android.util.Log
 import com.example.habitchain.data.local.HabitDao
 import com.example.habitchain.data.model.Habit
 import com.example.habitchain.data.model.HabitCompletion
@@ -78,7 +77,6 @@ class HabitRepository @Inject constructor(private val habitDao: HabitDao) {
                     }
                 }
         } catch (e: Exception) {
-            Log.e("HabitRepository", "Error getting weekly completions", e)
             emptyMap()
         }
     }

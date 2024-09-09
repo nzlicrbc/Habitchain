@@ -10,6 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.habitchain.databinding.FragmentHabitProgressBinding
+import com.example.habitchain.utils.Constants.ERROR_UPDATING_PROGRESS
+import com.example.habitchain.utils.Constants.INVALID_PROGRESS_INPUT
+import com.example.habitchain.utils.Constants.SUCCESS_UPDATING_PROGRESS
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,10 +52,10 @@ class HabitProgressFragment : Fragment() {
 
         viewModel.updateComplete.observe(viewLifecycleOwner) { success ->
             if (success) {
-                Toast.makeText(context, "Progress updated successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, SUCCESS_UPDATING_PROGRESS, Toast.LENGTH_SHORT).show()
                 findNavController().navigateUp()
             } else {
-                Toast.makeText(context, "Error updating progress", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, ERROR_UPDATING_PROGRESS, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -63,7 +66,7 @@ class HabitProgressFragment : Fragment() {
             if (progress != null) {
                 viewModel.updateHabitProgress(progress)
             } else {
-                Toast.makeText(context, "Please enter a valid number", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, INVALID_PROGRESS_INPUT, Toast.LENGTH_SHORT).show()
             }
         }
     }

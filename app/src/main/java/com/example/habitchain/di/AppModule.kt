@@ -7,6 +7,9 @@ import androidx.work.WorkManager
 import com.example.habitchain.data.api.QuoteApiService
 import com.example.habitchain.data.local.AppDatabase
 import com.example.habitchain.data.local.HabitDao
+import com.example.habitchain.utils.Constants.DATABASE_NAME
+import com.example.habitchain.utils.Constants.QUOTE_API_BASE_URL
+import com.example.habitchain.utils.Constants.SHARED_PREFERENCES_NAME
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -29,7 +32,7 @@ object AppModule {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "habitchain_database"
+            DATABASE_NAME
         ).build()
     }
 
@@ -53,7 +56,7 @@ object AppModule {
     @Singleton
     fun provideQuoteApiService(okHttpClient: OkHttpClient): QuoteApiService {
         return Retrofit.Builder()
-            .baseUrl("https://api.quotable.io/")
+            .baseUrl(QUOTE_API_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -75,7 +78,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
-        return context.getSharedPreferences("HabitChainPrefs", Context.MODE_PRIVATE)
+        return context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
 
     @Provides
