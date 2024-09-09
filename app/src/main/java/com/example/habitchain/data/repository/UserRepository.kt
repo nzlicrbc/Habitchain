@@ -1,8 +1,5 @@
 package com.example.habitchain.data.repository
 
-import android.content.Context
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
 import com.example.habitchain.data.model.User
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -12,11 +9,10 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
-    private val context: Context
+    private val firebaseAuth: FirebaseAuth
 ) {
 
-    suspend fun signOut() {
+    fun signOut() {
         firebaseAuth.signOut()
     }
 

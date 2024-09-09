@@ -13,8 +13,6 @@ import javax.inject.Inject
 class HabitRepository @Inject constructor(private val habitDao: HabitDao) {
     fun getAllHabits(): Flow<List<Habit>> = habitDao.getAllHabits()
 
-    fun getHabitFlow(habitId: Int): Flow<Habit?> = habitDao.getHabitByIdFlow(habitId)
-
     suspend fun getHabitById(id: Int): Habit? = habitDao.getHabitById(id)
 
     suspend fun insertHabit(habit: Habit): Long = withContext(Dispatchers.IO) {
@@ -26,16 +24,6 @@ class HabitRepository @Inject constructor(private val habitDao: HabitDao) {
     suspend fun deleteHabit(habitId: Int) = withContext(Dispatchers.IO) {
         val habit = habitDao.getHabitById(habitId)
         habit?.let { habitDao.deleteHabit(it) }
-    }
-
-    suspend fun updateHabitProgress(habitId: Int, progress: Int) {
-        withContext(Dispatchers.IO) {
-            val habit = habitDao.getHabitById(habitId)
-            habit?.let {
-                val updatedHabit = it.copy(progress = progress)
-                habitDao.updateHabit(updatedHabit)
-            }
-        }
     }
 
     suspend fun updateHabitCompletion(habitId: Int, completed: Boolean) {
@@ -61,43 +49,6 @@ class HabitRepository @Inject constructor(private val habitDao: HabitDao) {
         calendar.set(Calendar.MILLISECOND, 0)
         val todayStart = calendar.timeInMillis
         habitDao.removeHabitCompletionForToday(habitId, todayStart)
-    }
-
-    suspend fun getHabitsByCategory(category: String): List<Habit> {
-        return withContext(Dispatchers.IO) {
-            habitDao.getHabitsByCategory(category)
-        }
-    }
-
-    suspend fun updateHabitReminders(habitId: Int, reminders: List<String>) {
-        withContext(Dispatchers.IO) {
-            val habit = habitDao.getHabitById(habitId)
-            habit?.let {
-                val updatedHabit = it.copy(reminders = reminders)
-                habitDao.updateHabit(updatedHabit)
-            }
-        }
-    }
-
-    suspend fun getTotalHabits(): Int = withContext(Dispatchers.IO) {
-        try {
-            habitDao.getTotalHabitCount()
-        } catch (e: Exception) {
-            Log.e("HabitRepository", "Error getting total habits", e)
-            0
-        }
-    }
-
-    suspend fun getCompletedHabitsToday(): Int = withContext(Dispatchers.IO) {
-        try {
-            Log.d("HabitRepository", "Attempting to get completed habits")
-            val result = habitDao.getCompletedHabitsCount()
-            Log.d("HabitRepository", "Successfully got completed habits: $result")
-            result
-        } catch (e: Exception) {
-            Log.e("HabitRepository", "Error getting completed habits", e)
-            0
-        }
     }
 
     suspend fun getHabitCompletionsForLastWeek(): Map<String, Int> = withContext(Dispatchers.IO) {
