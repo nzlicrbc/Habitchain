@@ -23,7 +23,8 @@ class WeekAdapter(
         onDateSelected(date)
     }
 
-    inner class WeekViewHolder(private val weekLayout: LinearLayout) : RecyclerView.ViewHolder(weekLayout) {
+    inner class WeekViewHolder(private val weekLayout: LinearLayout) :
+        RecyclerView.ViewHolder(weekLayout) {
         private val dayBindings: List<ItemDayBinding> = List(7) {
             ItemDayBinding.inflate(LayoutInflater.from(weekLayout.context), weekLayout, false)
         }
@@ -52,8 +53,9 @@ class WeekAdapter(
         }
 
         private fun updateDayViewAppearance(binding: ItemDayBinding, date: Calendar) {
-            val isSelected = selectedDate.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR) &&
-                    selectedDate.get(Calendar.YEAR) == date.get(Calendar.YEAR)
+            val isSelected =
+                selectedDate.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR) &&
+                        selectedDate.get(Calendar.YEAR) == date.get(Calendar.YEAR)
             val isToday = Calendar.getInstance().let { today ->
                 date.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) &&
                         date.get(Calendar.YEAR) == today.get(Calendar.YEAR)
@@ -62,15 +64,32 @@ class WeekAdapter(
             when {
                 isSelected -> {
                     binding.textViewDate.setBackgroundResource(R.drawable.bg_selected_day)
-                    binding.textViewDate.setTextColor(ContextCompat.getColor(binding.root.context, android.R.color.darker_gray))
+                    binding.textViewDate.setTextColor(
+                        ContextCompat.getColor(
+                            binding.root.context,
+                            android.R.color.darker_gray
+                        )
+                    )
                 }
+
                 isToday -> {
                     binding.textViewDate.setBackgroundResource(R.drawable.bg_today)
-                    binding.textViewDate.setTextColor(ContextCompat.getColor(binding.root.context, android.R.color.darker_gray))
+                    binding.textViewDate.setTextColor(
+                        ContextCompat.getColor(
+                            binding.root.context,
+                            android.R.color.darker_gray
+                        )
+                    )
                 }
+
                 else -> {
                     binding.textViewDate.setBackgroundResource(R.drawable.bg_unselected_day)
-                    binding.textViewDate.setTextColor(ContextCompat.getColor(binding.root.context, android.R.color.darker_gray))
+                    binding.textViewDate.setTextColor(
+                        ContextCompat.getColor(
+                            binding.root.context,
+                            android.R.color.darker_gray
+                        )
+                    )
                 }
             }
         }

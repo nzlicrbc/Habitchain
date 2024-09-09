@@ -36,7 +36,8 @@ class HabitAdapter(
         holder.bind(getItem(position))
     }
 
-    inner class HabitViewHolder(private val binding: ItemHabitBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class HabitViewHolder(private val binding: ItemHabitBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(habit: Habit) {
             binding.apply {
