@@ -46,11 +46,17 @@ interface HabitDao {
     )
     suspend fun getHabitCompletionsForLastWeek(startDate: Long): List<DayCompletion>
 
-    @Insert
-    suspend fun insertHabitCompletion(habitCompletion: HabitCompletion)
+    @Query("SELECT * FROM habit_completions WHERE completion_date BETWEEN :startDate AND :endDate")
+    suspend fun getHabitCompletionsForDateRange(startDate: Long, endDate: Long): List<HabitCompletion>
+
+    @Query("DELETE FROM habit_completions WHERE completion_date BETWEEN :startDate AND :endDate")
+    suspend fun removeHabitCompletionsForDateRange(startDate: Long, endDate: Long)
 
     @Query("DELETE FROM habit_completions WHERE habit_id = :habitId AND completion_date >= :todayStart")
     suspend fun removeHabitCompletionForToday(habitId: Int, todayStart: Long)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertHabitCompletion(completion: HabitCompletion)
 }
 
 data class DayCompletion(

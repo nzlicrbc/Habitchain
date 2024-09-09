@@ -9,7 +9,7 @@ import com.example.habitchain.data.model.Quote
 import com.example.habitchain.data.repository.HabitRepository
 import com.example.habitchain.data.repository.QuoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -47,13 +47,32 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchHabits() {
         viewModelScope.launch {
-            habitRepository.getAllHabits()
-                .catch { e ->
-                    _error.value = "Failed to fetch habits: ${e.message}"
-                }
-                .collect { habitList ->
-                    _habits.value = filterHabitsList(habitList)
-                }
+            try {
+                val habits = habitRepository.getAllHabits().first()
+                val filteredAndResetHabits = filterAndResetHabits(habits)
+                _habits.value = filterHabitsList(filteredAndResetHabits)
+            } catch (e: Exception) {
+                _error.value = "Failed to fetch habits: ${e.message}"
+            }
+        }
+    }
+
+    private suspend fun filterAndResetHabits(habits: List<Habit>): List<Habit> {
+        val selectedDate = _selectedDate.value ?: return habits
+        val today = Calendar.getInstance()
+
+        return if (selectedDate.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+            selectedDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
+            habits
+        } else {
+            val completionsForDate = habitRepository.getHabitCompletionsForDate(selectedDate)
+            habits.map { habit ->
+                val isCompletedForSelectedDate = completionsForDate.any { it.habitId == habit.id }
+                habit.copy(
+                    isCompleted = isCompletedForSelectedDate,
+                    currentProgress = if (isCompletedForSelectedDate) habit.goal else 0
+                )
+            }
         }
     }
 

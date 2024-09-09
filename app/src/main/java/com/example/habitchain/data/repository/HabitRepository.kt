@@ -87,4 +87,22 @@ class HabitRepository @Inject constructor(private val habitDao: HabitDao) {
         val completion = HabitCompletion(habitId = habitId)
         habitDao.insertHabitCompletion(completion)
     }
+
+    suspend fun getHabitCompletionsForDate(date: Calendar): List<HabitCompletion> = withContext(Dispatchers.IO) {
+        val startOfDay = date.apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+
+        val endOfDay = date.apply {
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+            set(Calendar.MILLISECOND, 999)
+        }.timeInMillis
+
+        habitDao.getHabitCompletionsForDateRange(startOfDay, endOfDay)
+    }
 }
