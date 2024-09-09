@@ -23,21 +23,6 @@ class LoginViewModel @Inject constructor(
         _authenticationState.value = AuthState.Unauthenticated
     }
 
-    fun signUp(email: String, password: String) {
-        viewModelScope.launch {
-            _authenticationState.value = AuthState.Loading
-            try {
-                Log.d(TAG, "Attempting to sign up")
-                val user = userRepository.signUp(email, password)
-                Log.d(TAG, "Sign up successful")
-                _authenticationState.value = AuthState.Authenticated(user)
-            } catch (e: Exception) {
-                Log.e(TAG, "Sign up failed", e)
-                _authenticationState.value = AuthState.Error(e.message ?: "Kayıt başarısız oldu")
-            }
-        }
-    }
-
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
             _authenticationState.value = AuthState.Loading

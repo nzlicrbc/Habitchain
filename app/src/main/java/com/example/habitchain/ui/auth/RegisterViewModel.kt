@@ -19,7 +19,7 @@ class RegisterViewModel @Inject constructor(
     private val _registrationState = MutableLiveData<RegistrationState>()
     val registrationState: LiveData<RegistrationState> = _registrationState
 
-    fun register(username: String, email: String, password: String) {
+    fun register(email: String, password: String) {
         viewModelScope.launch {
             _registrationState.value = RegistrationState.Loading
             try {
@@ -29,7 +29,8 @@ class RegisterViewModel @Inject constructor(
                 _registrationState.value = RegistrationState.Success(user)
             } catch (e: Exception) {
                 Log.e(TAG, "User registration failed", e)
-                _registrationState.value = RegistrationState.Error(e.message ?: "Kayıt işlemi sırasında bir hata oluştu")
+                _registrationState.value =
+                    RegistrationState.Error(e.message ?: "Kayıt işlemi sırasında bir hata oluştu")
             }
         }
     }

@@ -1,14 +1,12 @@
 package com.example.habitchain.ui.auth
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.airbnb.lottie.LottieCompositionFactory
 import com.example.habitchain.R
 import com.example.habitchain.databinding.FragmentLoginBinding
 import com.google.android.material.snackbar.Snackbar
@@ -20,7 +18,11 @@ class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private val viewModel: LoginViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -54,13 +56,16 @@ class LoginFragment : Fragment() {
                 is LoginViewModel.AuthState.Authenticated -> {
                     findNavController().navigate(R.id.action_loginFragment_to_navigation_home)
                 }
+
                 is LoginViewModel.AuthState.Error -> {
                     showErrorMessage(state.message)
                     showLoading(false)
                 }
+
                 is LoginViewModel.AuthState.Loading -> {
                     showLoading(true)
                 }
+
                 is LoginViewModel.AuthState.Unauthenticated -> {
                     showLoading(false)
                 }
@@ -86,10 +91,6 @@ class LoginFragment : Fragment() {
 
     private fun showErrorMessage(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
-    }
-
-    private fun showMessage(message: String) {
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showLoading(isLoading: Boolean) {

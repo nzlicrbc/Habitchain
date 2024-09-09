@@ -1,7 +1,6 @@
 package com.example.habitchain.ui.settings
 
 import android.app.Application
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +9,6 @@ import com.example.habitchain.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import android.content.Context
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(

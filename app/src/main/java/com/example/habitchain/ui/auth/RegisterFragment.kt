@@ -15,10 +15,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class RegisterFragment : Fragment() {
 
     private lateinit var binding: FragmentRegisterBinding
-
     private val viewModel: RegisterViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -54,16 +57,23 @@ class RegisterFragment : Fragment() {
                     showMessage("Kayıt başarılı! Giriş yapabilirsiniz.")
                     findNavController().navigateUp()
                 }
+
                 is RegisterViewModel.RegistrationState.Error -> {
                     showErrorMessage(state.message)
                 }
+
                 is RegisterViewModel.RegistrationState.Loading -> {
                 }
             }
         }
     }
 
-    private fun validateInput(username: String, email: String, password: String, confirmPassword: String): Boolean {
+    private fun validateInput(
+        username: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ): Boolean {
         if (username.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
             showErrorMessage("Tüm alanları doldurun")
             return false
