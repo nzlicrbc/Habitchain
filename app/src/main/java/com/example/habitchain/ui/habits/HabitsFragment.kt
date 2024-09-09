@@ -8,9 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.habitchain.R
 import com.example.habitchain.databinding.FragmentHabitsBinding
-import com.example.habitchain.data.model.HabitCategory
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,7 +19,11 @@ class HabitsFragment : Fragment() {
     private val viewModel: HabitsViewModel by viewModels()
     private lateinit var categoryAdapter: HabitCategoryAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentHabitsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -35,7 +37,8 @@ class HabitsFragment : Fragment() {
 
     private fun setupRecyclerView() {
         categoryAdapter = HabitCategoryAdapter { category ->
-            val action = HabitsFragmentDirections.actionHabitsFragmentToAddEditHabitFragment(category = category.name)
+            val action =
+                HabitsFragmentDirections.actionHabitsFragmentToAddEditHabitFragment(category = category.name)
             findNavController().navigate(action)
         }
         binding.recyclerViewCategories.apply {
