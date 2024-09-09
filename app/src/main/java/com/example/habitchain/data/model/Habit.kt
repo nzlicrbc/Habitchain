@@ -21,5 +21,6 @@ data class Habit(
     val reminders: List<String>,
     val reminderMessage: String,
     var progress: Int = 0,
+    var currentProgress: Int = 0,
     var isCompleted: Boolean = false,
 )
