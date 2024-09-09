@@ -8,7 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="background">#F2F6FC</color>
-    <color name="primary">#E233FF</color>
+    <color name="pink">#FF9874</color>
     <color name="gray">#C2C2C2</color>
-    <color name="secondary">#E233FF</color>
+    <color name="light_pink">#FFD7C4</color>
+    <color name="highlight_day">#FFEB3B</color>
+    <color name="light_blue">#9DBDFF</color>
+    <color name="blue">#7695FF</color>
+    <color name="delete">#f44336</color>
 </resources>
