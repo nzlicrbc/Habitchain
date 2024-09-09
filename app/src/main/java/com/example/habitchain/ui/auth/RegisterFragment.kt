@@ -41,7 +41,7 @@ class RegisterFragment : Fragment() {
             val confirmPassword = binding.editTextConfirmPassword.text.toString()
 
             if (validateInput(username, email, password, confirmPassword)) {
-                viewModel.register(username, email, password)
+                viewModel.register(email, password)
             }
         }
 
