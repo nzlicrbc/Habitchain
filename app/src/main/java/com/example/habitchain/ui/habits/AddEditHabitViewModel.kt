@@ -40,8 +40,6 @@ class AddEditHabitViewModel @Inject constructor(
 
     init {
         _reminders.value = emptyList()
-        _selectedIcon.value = "ic_habit_default"
-        _selectedColor.value = "#FFFFFF"
     }
 
     fun setSelectedColor(color: String) {

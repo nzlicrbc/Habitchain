@@ -14,17 +14,12 @@ class HabitColorAdapter(
 ) : ListAdapter<String, HabitColorAdapter.ColorViewHolder>(ColorDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ColorViewHolder {
-        val binding = ItemHabitColorBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
+        val binding = ItemHabitColorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ColorViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ColorViewHolder, position: Int) {
-        val color = getItem(position)
-        holder.bind(color)
+        holder.bind(getItem(position))
     }
 
     inner class ColorViewHolder(private val binding: ItemHabitColorBinding) :
@@ -39,7 +34,6 @@ class HabitColorAdapter(
 
     class ColorDiffCallback : DiffUtil.ItemCallback<String>() {
         override fun areItemsTheSame(oldItem: String, newItem: String): Boolean = oldItem == newItem
-        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean =
-            oldItem == newItem
+        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean = oldItem == newItem
     }
 }

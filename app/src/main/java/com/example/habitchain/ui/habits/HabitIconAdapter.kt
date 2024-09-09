@@ -13,8 +13,7 @@ class HabitIconAdapter(
 ) : ListAdapter<String, HabitIconAdapter.IconViewHolder>(IconDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IconViewHolder {
-        val binding =
-            ItemHabitIconBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemHabitIconBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return IconViewHolder(binding)
     }
 
@@ -26,22 +25,25 @@ class HabitIconAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(iconName: String) {
-            val resourceId = binding.root.context.resources.getIdentifier(
-                iconName, "drawable", binding.root.context.packageName
-            )
-            binding.imageViewIcon.setImageResource(resourceId)
+            if (iconName.length == 2) {
+                binding.textViewIcon.text = iconName
+                binding.textViewIcon.visibility = android.view.View.VISIBLE
+                binding.imageViewIcon.visibility = android.view.View.GONE
+            } else {
+                val resourceId = binding.root.context.resources.getIdentifier(
+                    iconName, "drawable", binding.root.context.packageName
+                )
+                binding.imageViewIcon.setImageResource(resourceId)
+                binding.imageViewIcon.visibility = android.view.View.VISIBLE
+                binding.textViewIcon.visibility = android.view.View.GONE
+            }
             binding.root.isSelected = (iconName == selectedIcon())
             binding.root.setOnClickListener { onIconSelected(iconName) }
         }
     }
 
     class IconDiffCallback : DiffUtil.ItemCallback<String>() {
-        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem == newItem
-        }
-
-        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem == newItem
-        }
+        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean = oldItem == newItem
+        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean = oldItem == newItem
     }
 }

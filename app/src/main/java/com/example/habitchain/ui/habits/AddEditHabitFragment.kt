@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.habitchain.R
 import com.example.habitchain.data.model.Habit
 import com.example.habitchain.databinding.FragmentAddEditHabitBinding
@@ -59,7 +60,6 @@ class AddEditHabitFragment : Fragment() {
         setupFrequencySpinner()
         setupTrackDuringChips()
         setupReminderChips()
-        setupIconColorSelection()
 
         binding.fabAddReminder.setOnClickListener {
             showTimePicker()
@@ -72,65 +72,66 @@ class AddEditHabitFragment : Fragment() {
                 saveHabit()
             }
         }
-    }
 
-    private fun setupIconColorSelection() {
-        binding.frameLayoutIcon.setOnClickListener {
-            showIconSelectionDialog()
-        }
-
-        binding.viewSelectedColor.setOnClickListener {
-            showColorSelectionDialog()
-        }
+        binding.layoutIconSelection.setOnClickListener { showIconSelectionDialog() }
+        binding.layoutColorSelection.setOnClickListener { showColorSelectionDialog() }
     }
 
     private fun showIconSelectionDialog() {
-        val icons =
-            listOf("ic_water", "ic_exercise", "ic_cleaning", "ic_reading", "ic_habit_default")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, icons)
+        val icons = listOf("🏃", "💪", "🏋️", "🚴", "🏊", "🧘", "📚", "🎨", "🎵", "🌱", "🍎", "💧")
+        iconAdapter = HabitIconAdapter(
+            onIconSelected = {
+                viewModel.setSelectedIcon(it)
+                updateSelectedIcon(it)
+            },
+            selectedIcon = { viewModel.selectedIcon.value ?: "" }
+        )
+        iconAdapter.submitList(icons)
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_icon_selection, null)
+        val recyclerView = dialogView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerViewIcons)
+        recyclerView.layoutManager = GridLayoutManager(context, 4)
+        recyclerView.adapter = iconAdapter
 
         AlertDialog.Builder(requireContext())
             .setTitle("Select Icon")
-            .setAdapter(adapter) { _, which ->
-                val selectedIcon = icons[which]
-                viewModel.setSelectedIcon(selectedIcon)
-            }
+            .setView(dialogView)
+            .setPositiveButton("OK", null)
             .show()
     }
 
     private fun showColorSelectionDialog() {
-        val colors = listOf("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF")
-        val colorViews = colors.map { color ->
-            View(context).apply {
-                layoutParams = ViewGroup.LayoutParams(50, 50)
-                setBackgroundColor(Color.parseColor(color))
-            }
-        }
+        val colors = listOf("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF",
+            "#800000", "#008000", "#000080", "#808000", "#800080", "#008080",
+            "#FFA500", "#FFC0CB", "#800000", "#FA8072", "#90EE90", "#ADD8E6")
+        colorAdapter = HabitColorAdapter(
+            onColorSelected = {
+                viewModel.setSelectedColor(it)
+                updateSelectedColor(it)
+            },
+            selectedColor = { viewModel.selectedColor.value ?: "" }
+        )
+        colorAdapter.submitList(colors)
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_color_selection, null)
+        val recyclerView = dialogView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerViewColors)
+        recyclerView.layoutManager = GridLayoutManager(context, 6)
+        recyclerView.adapter = colorAdapter
 
         AlertDialog.Builder(requireContext())
             .setTitle("Select Color")
-            .setAdapter(
-                object : ArrayAdapter<View>(
-                    requireContext(),
-                    android.R.layout.simple_list_item_1,
-                    colorViews
-                ) {
-                    override fun getView(
-                        position: Int,
-                        convertView: View?,
-                        parent: ViewGroup
-                    ): View {
-                        return colorViews[position]
-                    }
-                },
-                { _, which ->
-                    val selectedColor = colors[which]
-                    viewModel.setSelectedColor(selectedColor)
-                }
-            )
+            .setView(dialogView)
+            .setPositiveButton("OK", null)
             .show()
     }
 
+    private fun updateSelectedIcon(icon: String) {
+        binding.textViewSelectedIcon.text = icon
+    }
+
+    private fun updateSelectedColor(color: String) {
+        binding.viewSelectedColor.setBackgroundColor(Color.parseColor(color))
+    }
 
     private fun setupFrequencySpinner() {
         val frequencies = arrayOf("Day", "Week", "Month")
@@ -271,15 +272,6 @@ class AddEditHabitFragment : Fragment() {
         viewModel.selectedColor.observe(viewLifecycleOwner) { color ->
             updateSelectedColor(color)
         }
-    }
-
-    private fun updateSelectedIcon(iconName: String) {
-        val resourceId = resources.getIdentifier(iconName, "drawable", requireContext().packageName)
-        binding.imageViewSelectedIcon.setImageResource(resourceId)
-    }
-
-    private fun updateSelectedColor(color: String) {
-        binding.viewSelectedColor.setBackgroundColor(Color.parseColor(color))
     }
 
     private fun populateUI(habit: Habit) {
