@@ -11,8 +11,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -24,6 +24,7 @@ import com.example.habitchain.data.repository.UserRepository
 import com.example.habitchain.utils.Constants.CHANNEL_ID
 import dagger.hilt.android.AndroidEntryPoint
 import com.google.firebase.FirebaseApp
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -80,13 +81,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val sharedPreferences = getSharedPreferences("app_settings", Context.MODE_PRIVATE)
-        val isDarkMode = sharedPreferences.getBoolean("dark_mode", false)
-        AppCompatDelegate.setDefaultNightMode(
-            if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES
-            else AppCompatDelegate.MODE_NIGHT_NO
-        )
-
         if (userRepository.isFirebaseInitialized()) {
             Log.d("MainActivity", "Firebase is initialized")
         } else {
@@ -94,8 +88,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         createNotificationChannel()
-
+        checkUserAndNavigate()
         requestNotificationPermission()
+    }
+
+    private fun checkUserAndNavigate() {
+        lifecycleScope.launch {
+            if (userRepository.getCurrentUser() != null) {
+                navController.navigate(R.id.navigation_home)
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

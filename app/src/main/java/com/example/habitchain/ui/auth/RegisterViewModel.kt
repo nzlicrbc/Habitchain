@@ -10,7 +10,6 @@ import com.example.habitchain.data.repository.UserRepository
 import com.example.habitchain.utils.Constants.ERROR_REGISTRATION_FAILED
 import com.example.habitchain.utils.Constants.LOG_REGISTER_ATTEMPT
 import com.example.habitchain.utils.Constants.LOG_REGISTER_SUCCESS
-import com.example.habitchain.utils.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,12 +26,12 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             _registrationState.value = RegistrationState.Loading
             try {
-                Log.d(TAG, "$LOG_REGISTER_ATTEMPT$email")
+                Log.d("RegisterViewModel", "$LOG_REGISTER_ATTEMPT$email")
                 val user = userRepository.signUp(email, password)
-                Log.d(TAG, LOG_REGISTER_SUCCESS)
+                Log.d("RegisterViewModel", LOG_REGISTER_SUCCESS)
                 _registrationState.value = RegistrationState.Success(user)
             } catch (e: Exception) {
-                Log.e(TAG, ERROR_REGISTRATION_FAILED, e)
+                Log.e("RegisterViewModel", ERROR_REGISTRATION_FAILED, e)
                 _registrationState.value =
                     RegistrationState.Error(e.message ?: ERROR_REGISTRATION_FAILED)
             }
