@@ -4,6 +4,7 @@ import androidx.room.*
 import com.example.habitchain.data.model.Habit
 import com.example.habitchain.data.model.HabitCompletion
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 @Dao
 interface HabitDao {
@@ -57,6 +58,15 @@ interface HabitDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHabitCompletion(completion: HabitCompletion)
+
+    @Query("""
+        SELECT COUNT(DISTINCT hc.habit_id)
+        FROM habit_completions hc
+        JOIN habits h ON h.id = hc.habit_id
+        WHERE date(hc.completion_date / 1000, 'unixepoch', 'localtime') = date(:date / 1000, 'unixepoch', 'localtime')
+        AND h.isCompleted = 1
+    """)
+    suspend fun getCompletedHabitsCountForDate(date: Date): Int
 }
 
 data class DayCompletion(

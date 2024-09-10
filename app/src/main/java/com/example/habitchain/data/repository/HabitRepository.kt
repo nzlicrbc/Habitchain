@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 
 class HabitRepository @Inject constructor(private val habitDao: HabitDao) {
@@ -53,7 +54,7 @@ class HabitRepository @Inject constructor(private val habitDao: HabitDao) {
     suspend fun getHabitCompletionsForLastWeek(): Map<String, Int> = withContext(Dispatchers.IO) {
         try {
             val calendar = Calendar.getInstance()
-            calendar.add(Calendar.DAY_OF_YEAR, -7)
+            calendar.add(Calendar.DAY_OF_YEAR, -6)
             calendar.set(Calendar.HOUR_OF_DAY, 0)
             calendar.set(Calendar.MINUTE, 0)
             calendar.set(Calendar.SECOND, 0)
@@ -79,6 +80,10 @@ class HabitRepository @Inject constructor(private val habitDao: HabitDao) {
         } catch (e: Exception) {
             emptyMap()
         }
+    }
+
+    suspend fun getCompletedHabitsCountForDate(date: Date): Int {
+        return habitDao.getCompletedHabitsCountForDate(date)
     }
 
     suspend fun addHabitCompletion(habitId: Int) {

@@ -49,21 +49,36 @@ class StatsViewModel @Inject constructor(
     }
 
     private suspend fun updateWeeklyData() {
-        val weekData = habitRepository.getHabitCompletionsForLastWeek()
-        Log.d("StatsViewModel", "Raw weekly data: $weekData")
+        val calendar = Calendar.getInstance()
+        calendar.firstDayOfWeek = Calendar.MONDAY
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
 
-        val formattedWeekData = weekData.map { (day, count) ->
-            day.substring(0, 3).capitalize() to count
-        }.sortedBy { getDayOfWeek(it.first) }
+        val weekData = mutableListOf<Pair<String, Int>>()
+        repeat(7) { dayOffset ->
+            val date = calendar.time
+            val dayName = when (calendar.get(Calendar.DAY_OF_WEEK)) {
+                Calendar.MONDAY -> "Mon"
+                Calendar.TUESDAY -> "Tue"
+                Calendar.WEDNESDAY -> "Wed"
+                Calendar.THURSDAY -> "Thu"
+                Calendar.FRIDAY -> "Fri"
+                Calendar.SATURDAY -> "Sat"
+                Calendar.SUNDAY -> "Sun"
+                else -> ""
+            }
+            val completedCount = habitRepository.getCompletedHabitsCountForDate(date)
+            weekData.add(Pair(dayName, completedCount))
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
 
-        Log.d("StatsViewModel", "Formatted weekly data: $formattedWeekData")
-        _weeklyData.postValue(formattedWeekData)
+        Log.d("StatsViewModel", "Weekly data: $weekData")
+        _weeklyData.postValue(weekData)
     }
 
     private suspend fun updateStats() {
         val habits = habitRepository.getAllHabits().first()
         val totalHabits = habits.size
-        val completedToday = habits.count { it.isCompleted }
+        val completedToday = habitRepository.getCompletedHabitsCountForDate(Calendar.getInstance().time)
         val notDoneToday = totalHabits - completedToday
 
         val stats = mapOf(
@@ -73,18 +88,5 @@ class StatsViewModel @Inject constructor(
         )
         Log.d("StatsViewModel", "Updated stats: $stats")
         _stats.postValue(stats)
-    }
-
-    private fun getDayOfWeek(dayName: String): Int {
-        return when (dayName.toLowerCase()) {
-            "mon" -> 1
-            "tue" -> 2
-            "wed" -> 3
-            "thu" -> 4
-            "fri" -> 5
-            "sat" -> 6
-            "sun" -> 7
-            else -> 0
-        }
     }
 }

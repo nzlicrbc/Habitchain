@@ -174,6 +174,7 @@ class StatsFragment : Fragment() {
         binding.barChart.apply {
             data = BarData(dataSet)
             xAxis.valueFormatter = IndexAxisValueFormatter(weeklyData.map { it.first })
+            axisLeft.axisMaximum = (weeklyData.maxOfOrNull { it.second } ?: 0) + 1f
             notifyDataSetChanged()
             invalidate()
         }
