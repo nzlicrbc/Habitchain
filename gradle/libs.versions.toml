@@ -33,7 +33,7 @@ securityCryptoKtx = "1.1.0-alpha06"
 mpandroidchart = "v3.1.0"
 viewpager2 = "1.0.0"
 hiltCompiler = "1.2.0"
-lottie = "6.0.0"
+lottie = "6.1.0"
 
 [libraries]
 androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }

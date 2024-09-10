@@ -1,0 +1,28 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/habit_tracker_static">
+
+    <target
+        android:name="item1"
+        android:animation="@animator/list_item_appear1" />
+
+    <target
+        android:name="item2"
+        android:animation="@animator/list_item_appear2" />
+
+    <target
+        android:name="item3"
+        android:animation="@animator/list_item_appear3" />
+
+    <target
+        android:name="checkmark1"
+        android:animation="@animator/checkmark_appear" />
+
+    <target
+        android:name="checkmark2"
+        android:animation="@animator/checkmark_appear" />
+
+    <target
+        android:name="checkmark3"
+        android:animation="@animator/checkmark_appear" />
+
+</animated-vector>

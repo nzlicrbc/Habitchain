@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.habitchain.databinding.FragmentRegisterBinding
-import com.example.habitchain.utils.Constants.ERROR_FIELDS_BLANK
 import com.example.habitchain.utils.Constants.ERROR_INVALID_EMAIL
 import com.example.habitchain.utils.Constants.ERROR_PASSWORDS_MISMATCH
 import com.example.habitchain.utils.Constants.ERROR_PASSWORD_LENGTH
@@ -40,12 +39,11 @@ class RegisterFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.buttonRegister.setOnClickListener {
-            val username = binding.editTextUsername.text.toString()
             val email = binding.editTextEmail.text.toString()
             val password = binding.editTextPassword.text.toString()
             val confirmPassword = binding.editTextConfirmPassword.text.toString()
 
-            if (validateInput(username, email, password, confirmPassword)) {
+            if (validateInput(email, password, confirmPassword)) {
                 viewModel.register(email, password)
             }
         }
@@ -74,15 +72,10 @@ class RegisterFragment : Fragment() {
     }
 
     private fun validateInput(
-        username: String,
         email: String,
         password: String,
         confirmPassword: String
     ): Boolean {
-        if (username.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-            showErrorMessage(ERROR_FIELDS_BLANK)
-            return false
-        }
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             showErrorMessage(ERROR_INVALID_EMAIL)
             return false

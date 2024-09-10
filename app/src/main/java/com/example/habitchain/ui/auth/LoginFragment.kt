@@ -1,12 +1,19 @@
 package com.example.habitchain.ui.auth
 
+import android.graphics.drawable.Animatable2
+import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.example.habitchain.R
 import com.example.habitchain.databinding.FragmentLoginBinding
 import com.example.habitchain.utils.Constants.ERROR_EMPTY_FIELDS
@@ -33,10 +40,23 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lottieAnimationView.setAnimation(R.raw.login3)
-        binding.lottieAnimationView.playAnimation()
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
         setupClickListeners()
         observeAuthState()
+        setupSvgAnimation()
+    }
+
+    private fun setupSvgAnimation() {
+        val animationView = binding.animationView
+        val avd = AnimatedVectorDrawableCompat.create(requireContext(), R.drawable.habit_tracker_animation)
+        animationView.setImageDrawable(avd)
+        avd?.registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
+            override fun onAnimationEnd(drawable: Drawable?) {
+                animationView.post { avd.start() }
+            }
+        })
+        avd?.start()
     }
 
     private fun setupClickListeners() {
