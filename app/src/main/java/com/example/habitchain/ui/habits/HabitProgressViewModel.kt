@@ -15,35 +15,44 @@ class HabitProgressViewModel @Inject constructor(
     private val habitRepository: HabitRepository
 ) : ViewModel() {
 
-    private val _habit = MutableLiveData<Habit?>()
-    val habit: LiveData<Habit?> = _habit
-
-    private val _updateComplete = MutableLiveData<Boolean>()
-    val updateComplete: LiveData<Boolean> = _updateComplete
+    private val _habit = MutableLiveData<Habit>()
+    val habit: LiveData<Habit> = _habit
 
     fun loadHabit(habitId: Int) {
         viewModelScope.launch {
-            try {
-                val loadedHabit = habitRepository.getHabitById(habitId)
-                _habit.value = loadedHabit
-            } catch (e: Exception) {
+            habitRepository.getHabitById(habitId)?.let {
+                _habit.value = it
             }
         }
     }
 
-    fun updateHabitProgress(progress: Int) {
-        viewModelScope.launch {
-            try {
-                val currentHabit = _habit.value
-                if (currentHabit != null) {
-                    val updatedHabit = currentHabit.copy(currentProgress = progress)
-                    habitRepository.updateHabit(updatedHabit)
-                    _updateComplete.value = true
-                } else {
-                    _updateComplete.value = false
-                }
-            } catch (e: Exception) {
-                _updateComplete.value = false
+    fun incrementProgress() {
+        _habit.value?.let { habit ->
+            updateProgress(habit.currentProgress + 1)
+        }
+    }
+
+    fun decrementProgress() {
+        _habit.value?.let { habit ->
+            updateProgress(habit.currentProgress - 1)
+        }
+    }
+
+    fun resetProgress() {
+        updateProgress(0)
+    }
+
+    fun updateProgress(progress: Int) {
+        _habit.value?.let { habit ->
+            val updatedProgress = progress.coerceIn(0, habit.goal)
+            val updatedHabit = habit.copy(
+                currentProgress = updatedProgress,
+                progress = updatedProgress,
+                isCompleted = updatedProgress >= habit.goal
+            )
+            viewModelScope.launch {
+                habitRepository.updateHabit(updatedHabit)
+                _habit.value = updatedHabit
             }
         }
     }

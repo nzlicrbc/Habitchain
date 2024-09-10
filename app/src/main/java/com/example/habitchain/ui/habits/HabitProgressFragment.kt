@@ -4,70 +4,81 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.habitchain.databinding.FragmentHabitProgressBinding
-import com.example.habitchain.utils.Constants.ERROR_UPDATING_PROGRESS
-import com.example.habitchain.utils.Constants.INVALID_PROGRESS_INPUT
-import com.example.habitchain.utils.Constants.SUCCESS_UPDATING_PROGRESS
+import com.example.habitchain.databinding.DialogManualInputBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HabitProgressFragment : Fragment() {
 
-    private lateinit var binding: FragmentHabitProgressBinding
+    private var _binding: FragmentHabitProgressBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: HabitProgressViewModel by viewModels()
-    private val args: HabitProgressFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentHabitProgressBinding.inflate(inflater, container, false)
+        _binding = FragmentHabitProgressBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.loadHabit(args.habitId)
         setupObservers()
         setupListeners()
+
+        arguments?.getInt("habitId")?.let { habitId ->
+            viewModel.loadHabit(habitId)
+        }
     }
 
     private fun setupObservers() {
         viewModel.habit.observe(viewLifecycleOwner) { habit ->
-            habit?.let {
-                binding.textViewHabitName.text = it.name
-                binding.textViewGoal.text = "Goal: ${it.goal} ${it.unit}"
-                binding.textViewCurrentProgress.text =
-                    "Current progress: ${it.currentProgress} ${it.unit}"
-                binding.editTextProgress.setText(it.currentProgress.toString())
-            }
-        }
-
-        viewModel.updateComplete.observe(viewLifecycleOwner) { success ->
-            if (success) {
-                Toast.makeText(context, SUCCESS_UPDATING_PROGRESS, Toast.LENGTH_SHORT).show()
-                findNavController().navigateUp()
-            } else {
-                Toast.makeText(context, ERROR_UPDATING_PROGRESS, Toast.LENGTH_SHORT).show()
-            }
+            binding.textViewHabitName.text = habit.name
+            binding.textViewCurrentProgress.text = habit.currentProgress.toString()
+            binding.textViewUnit.text = habit.unit
+            binding.textViewGoal.text = "/ ${habit.goal} ${habit.unit}"
         }
     }
 
     private fun setupListeners() {
-        binding.buttonUpdateProgress.setOnClickListener {
-            val progress = binding.editTextProgress.text.toString().toIntOrNull()
-            if (progress != null) {
-                viewModel.updateHabitProgress(progress)
-            } else {
-                Toast.makeText(context, INVALID_PROGRESS_INPUT, Toast.LENGTH_SHORT).show()
-            }
+        binding.buttonIncrease.setOnClickListener {
+            viewModel.incrementProgress()
         }
+        binding.buttonDecrease.setOnClickListener {
+            viewModel.decrementProgress()
+        }
+        binding.buttonReset.setOnClickListener {
+            viewModel.resetProgress()
+        }
+        binding.buttonManualInput.setOnClickListener {
+            showManualInputDialog()
+        }
+    }
+
+    private fun showManualInputDialog() {
+        val dialogBinding = DialogManualInputBinding.inflate(layoutInflater)
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Enter Progress")
+            .setView(dialogBinding.root)
+            .setPositiveButton("Update") { _, _ ->
+                val input = dialogBinding.editTextManualInput.text?.toString() ?: ""
+                input.toIntOrNull()?.let { progress ->
+                    viewModel.updateProgress(progress)
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
