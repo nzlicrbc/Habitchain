@@ -50,10 +50,10 @@ class HabitProgressFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        binding.buttonIncrease.setOnClickListener {
+        binding.imageViewIncrease.setOnClickListener {
             viewModel.incrementProgress()
         }
-        binding.buttonDecrease.setOnClickListener {
+        binding.imageViewDecrease.setOnClickListener {
             viewModel.decrementProgress()
         }
         binding.buttonReset.setOnClickListener {
