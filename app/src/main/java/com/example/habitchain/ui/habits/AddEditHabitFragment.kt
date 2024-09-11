@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -92,6 +93,76 @@ class AddEditHabitFragment : Fragment() {
 
         binding.layoutIconSelection.setOnClickListener { showIconSelectionDialog() }
         binding.layoutColorSelection.setOnClickListener { showColorSelectionDialog() }
+
+        setupTrackingDaysChipGroup()
+    }
+
+    private fun setupFrequencySpinner() {
+        val frequencies = arrayOf(DAY, WEEK, MONTH)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, frequencies)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerGoalPeriod.adapter = adapter
+
+        binding.spinnerGoalPeriod.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    when (frequencies[position]) {
+                        DAY -> binding.chipGroupTrackingDays.visibility = View.GONE
+                        WEEK -> {
+                            binding.chipGroupTrackingDays.visibility = View.VISIBLE
+                            setupWeekDayChips()
+                        }
+
+                        MONTH -> {
+                            binding.chipGroupTrackingDays.visibility = View.VISIBLE
+                            setupMonthDayChips()
+                        }
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+    }
+
+    private fun setupTrackingDaysChipGroup() {
+        binding.chipGroupTrackingDays.visibility = View.GONE
+    }
+
+    private fun setupWeekDayChips() {
+        binding.chipGroupTrackingDays.removeAllViews()
+        val weekDays = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+        weekDays.forEach { day ->
+            val chip = createChip(day)
+            binding.chipGroupTrackingDays.addView(chip)
+        }
+    }
+
+    private fun setupMonthDayChips() {
+        binding.chipGroupTrackingDays.removeAllViews()
+        (1..31).forEach { day ->
+            val chip = createChip(day.toString())
+            binding.chipGroupTrackingDays.addView(chip)
+        }
+    }
+
+    private fun createChip(text: String): Chip {
+        return Chip(context).apply {
+            this.text = text
+            isCheckable = true
+            setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    viewModel.addTrackingDay(text)
+                } else {
+                    viewModel.removeTrackingDay(text)
+                }
+            }
+        }
     }
 
     private fun showIconSelectionDialog() {
@@ -152,14 +223,6 @@ class AddEditHabitFragment : Fragment() {
 
     private fun updateSelectedColor(color: String) {
         binding.viewSelectedColor.setBackgroundColor(Color.parseColor(color))
-    }
-
-    private fun setupFrequencySpinner() {
-        val frequencies = arrayOf(DAY, WEEK, MONTH)
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, frequencies)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerGoalPeriod.adapter = adapter
     }
 
     private fun setupTrackDuringChips() {
@@ -228,12 +291,15 @@ class AddEditHabitFragment : Fragment() {
         }
         val reminderMessage = binding.editTextReminderMessage.text.toString().trim()
 
+        val trackingDays = viewModel.getTrackingDays()
+
         viewModel.saveHabit(
             name,
             args.category,
             goal,
             unit,
             frequency,
+            trackingDays,
             trackDuring,
             reminderMessage
         )
@@ -249,13 +315,16 @@ class AddEditHabitFragment : Fragment() {
         }
         val reminderMessage = binding.editTextReminderMessage.text.toString().trim()
 
+        val trackingDays = viewModel.getTrackingDays()
+
         viewModel.updateHabit(
-            args.habitId,
+            args.habitId!!,
             name,
             args.category,
             goal,
             unit,
             frequency,
+            trackingDays,
             trackDuring,
             reminderMessage
         )
@@ -308,6 +377,17 @@ class AddEditHabitFragment : Fragment() {
         }
 
         viewModel.setReminders(habit.reminders)
+        viewModel.setTrackingDays(habit.trackingDays)
+
+        when (habit.frequency) {
+            WEEK -> setupWeekDayChips()
+            MONTH -> setupMonthDayChips()
+            else -> binding.chipGroupTrackingDays.visibility = View.GONE
+        }
+
+        habit.trackingDays.forEach { day ->
+            binding.chipGroupTrackingDays.findViewWithTag<Chip>(day)?.isChecked = true
+        }
 
         binding.editTextReminderMessage.setText(habit.reminderMessage)
     }

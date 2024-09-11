@@ -17,6 +17,7 @@ data class Habit(
     val unit: String,
     val frequency: String,
     @TypeConverters(Converters::class)
+    val trackingDays: List<String>,
     val trackDuring: List<String>,
     @TypeConverters(Converters::class)
     val reminders: List<String>,

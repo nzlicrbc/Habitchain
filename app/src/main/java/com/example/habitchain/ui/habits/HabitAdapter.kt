@@ -48,10 +48,7 @@ class HabitAdapter(
 
                 viewHabitColor.setBackgroundColor(Color.parseColor(habit.color))
 
-                val iconResId = root.context.resources.getIdentifier(
-                    habit.iconName, "drawable", root.context.packageName
-                )
-                imageViewHabitIcon.setImageResource(iconResId)
+                textViewIcon.text = habit.iconName
 
                 checkBoxHabitCompletion.isChecked = habit.isCompleted
 

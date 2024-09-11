@@ -67,19 +67,42 @@ class HomeViewModel @Inject constructor(
         val selectedDate = _selectedDate.value ?: return habits
         val today = Calendar.getInstance()
 
-        return if (selectedDate.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
-            selectedDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
-        ) {
-            habits
-        } else {
-            val completionsForDate = habitRepository.getHabitCompletionsForDate(selectedDate)
-            habits.map { habit ->
+        return habits.filter { habit ->
+            when (habit.frequency) {
+                "Day" -> true
+                "Week" -> habit.trackingDays.contains(getDayOfWeek(selectedDate))
+                "Month" -> habit.trackingDays.contains(
+                    selectedDate.get(Calendar.DAY_OF_MONTH).toString()
+                )
+
+                else -> false
+            }
+        }.map { habit ->
+            if (selectedDate.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+                selectedDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
+            ) {
+                habit
+            } else {
+                val completionsForDate = habitRepository.getHabitCompletionsForDate(selectedDate)
                 val isCompletedForSelectedDate = completionsForDate.any { it.habitId == habit.id }
                 habit.copy(
                     isCompleted = isCompletedForSelectedDate,
                     currentProgress = if (isCompletedForSelectedDate) habit.goal else 0
                 )
             }
+        }
+    }
+
+    private fun getDayOfWeek(date: Calendar): String {
+        return when (date.get(Calendar.DAY_OF_WEEK)) {
+            Calendar.MONDAY -> "Mon"
+            Calendar.TUESDAY -> "Tue"
+            Calendar.WEDNESDAY -> "Wed"
+            Calendar.THURSDAY -> "Thu"
+            Calendar.FRIDAY -> "Fri"
+            Calendar.SATURDAY -> "Sat"
+            Calendar.SUNDAY -> "Sun"
+            else -> ""
         }
     }
 

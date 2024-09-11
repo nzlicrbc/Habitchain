@@ -28,7 +28,6 @@ import java.util.*
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var habitAdapter: HabitAdapter
     private lateinit var weekAdapter: WeekAdapter
@@ -44,7 +43,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupUI()
         setupRecyclerView()
         setupObservers()
@@ -54,7 +52,6 @@ class HomeFragment : Fragment() {
     private fun setupUI() {
         val dateFormat = SimpleDateFormat("EEEE, MMMM d", Locale.getDefault())
         binding.textViewToday.text = dateFormat.format(Date())
-
         setupWeekView()
     }
 
@@ -85,9 +82,7 @@ class HomeFragment : Fragment() {
 
     private fun updateDateDisplay(selectedDate: Calendar) {
         val today = Calendar.getInstance()
-
         val dateFormat = SimpleDateFormat("MMMM d", Locale.getDefault())
-
         val displayText = if (selectedDate.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
             selectedDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
         ) {
@@ -95,10 +90,8 @@ class HomeFragment : Fragment() {
         } else {
             dateFormat.format(selectedDate.time)
         }
-
         binding.textViewToday.text = displayText
     }
-
 
     private fun createWeeks(): List<List<Calendar>> {
         val calendar = Calendar.getInstance()
@@ -154,10 +147,6 @@ class HomeFragment : Fragment() {
         )
         val itemTouchHelper = ItemTouchHelper(swipeActionCallback)
         itemTouchHelper.attachToRecyclerView(binding.recyclerViewHabits)
-
-        viewModel.habits.observe(viewLifecycleOwner) { habits ->
-            habitAdapter.submitList(habits)
-        }
     }
 
     private fun setupObservers() {

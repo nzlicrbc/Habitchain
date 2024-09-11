@@ -1,8 +1,14 @@
 package com.example.habitchain.ui.habits
 
-import android.util.Log
-import androidx.lifecycle.*
-import androidx.work.*
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.example.habitchain.NotificationWorker
 import com.example.habitchain.data.model.Habit
 import com.example.habitchain.data.repository.HabitRepository
@@ -14,7 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -23,6 +29,9 @@ class AddEditHabitViewModel @Inject constructor(
     private val habitRepository: HabitRepository,
     private val workManager: WorkManager
 ) : ViewModel() {
+
+    private val _habit = MutableLiveData<Habit?>()
+    val habit: LiveData<Habit?> = _habit
 
     private val _selectedColor = MutableLiveData<String>()
     val selectedColor: LiveData<String> = _selectedColor
@@ -33,17 +42,99 @@ class AddEditHabitViewModel @Inject constructor(
     private val _reminders = MutableLiveData<List<String>>()
     val reminders: LiveData<List<String>> = _reminders
 
+    private val _trackingDays = MutableLiveData<MutableSet<String>>(mutableSetOf())
+    val trackingDays: LiveData<MutableSet<String>> = _trackingDays
+
     private val _saveComplete = MutableLiveData<Boolean>()
     val saveComplete: LiveData<Boolean> = _saveComplete
 
     private val _habitAdded = MutableSharedFlow<Habit>()
     val habitAdded = _habitAdded.asSharedFlow()
 
-    private val _habit = MutableLiveData<Habit?>()
-    val habit: MutableLiveData<Habit?> = _habit
+    fun loadHabit(habitId: Int) {
+        viewModelScope.launch {
+            _habit.value = habitRepository.getHabitById(habitId)
+            _habit.value?.let { habit ->
+                _selectedColor.value = habit.color
+                _selectedIcon.value = habit.iconName
+                _reminders.value = habit.reminders
+                _trackingDays.value = habit.trackingDays.toMutableSet()
+            }
+        }
+    }
 
-    init {
-        _reminders.value = emptyList()
+    fun saveHabit(
+        name: String,
+        category: String,
+        goal: Int,
+        unit: String,
+        frequency: String,
+        trackingDays: List<String>,
+        trackDuring: List<String>,
+        reminderMessage: String
+    ) {
+        viewModelScope.launch {
+            try {
+                val habit = Habit(
+                    name = name,
+                    category = category,
+                    iconName = _selectedIcon.value ?: "",
+                    color = _selectedColor.value ?: "",
+                    goal = goal,
+                    unit = unit,
+                    frequency = frequency,
+                    trackingDays = trackingDays,
+                    trackDuring = trackDuring,
+                    reminders = _reminders.value ?: emptyList(),
+                    reminderMessage = reminderMessage
+                )
+                val insertedId = habitRepository.insertHabit(habit)
+                val savedHabit = habit.copy(id = insertedId.toInt())
+                scheduleReminders(savedHabit)
+                _saveComplete.value = true
+                _habitAdded.emit(savedHabit)
+            } catch (e: Exception) {
+                _saveComplete.value = false
+            }
+        }
+    }
+
+    fun updateHabit(
+        habitId: Int,
+        name: String,
+        category: String,
+        goal: Int,
+        unit: String,
+        frequency: String,
+        trackingDays: List<String>,
+        trackDuring: List<String>,
+        reminderMessage: String
+    ) {
+        viewModelScope.launch {
+            try {
+                val updatedHabit = _habit.value?.copy(
+                    name = name,
+                    category = category,
+                    iconName = _selectedIcon.value ?: "",
+                    color = _selectedColor.value ?: "",
+                    goal = goal,
+                    unit = unit,
+                    frequency = frequency,
+                    trackingDays = trackingDays,
+                    trackDuring = trackDuring,
+                    reminders = _reminders.value ?: emptyList(),
+                    reminderMessage = reminderMessage
+                ) ?: return@launch
+
+                habitRepository.updateHabit(updatedHabit)
+                cancelReminders(habitId)
+                scheduleReminders(updatedHabit)
+                _saveComplete.value = true
+                _habitAdded.emit(updatedHabit)
+            } catch (e: Exception) {
+                _saveComplete.value = false
+            }
+        }
     }
 
     fun setSelectedColor(color: String) {
@@ -66,6 +157,24 @@ class AddEditHabitViewModel @Inject constructor(
 
     fun setReminders(newReminders: List<String>) {
         _reminders.value = newReminders
+    }
+
+    fun addTrackingDay(day: String) {
+        _trackingDays.value?.add(day)
+        _trackingDays.value = _trackingDays.value
+    }
+
+    fun removeTrackingDay(day: String) {
+        _trackingDays.value?.remove(day)
+        _trackingDays.value = _trackingDays.value
+    }
+
+    fun setTrackingDays(days: List<String>) {
+        _trackingDays.value = days.toMutableSet()
+    }
+
+    fun getTrackingDays(): List<String> {
+        return _trackingDays.value?.toList() ?: emptyList()
     }
 
     private fun scheduleReminders(habit: Habit) {
@@ -91,11 +200,6 @@ class AddEditHabitViewModel @Inject constructor(
                 ExistingWorkPolicy.REPLACE,
                 request
             )
-
-            /*Log.d(
-                "AddEditHabitViewModel",
-                "Scheduled reminder for habit: ${habit.name} at $reminderTime with initial delay: $initialDelay ms"
-            )*/
         }
     }
 
@@ -117,104 +221,12 @@ class AddEditHabitViewModel @Inject constructor(
 
     private fun cancelReminders(habitId: Int) {
         workManager.cancelAllWorkByTag("reminder_$habitId")
-        //Log.d("AddEditHabitViewModel", "Cancelled all reminders for habit: $habitId")
-    }
-
-
-    fun saveHabit(
-        name: String,
-        category: String,
-        goal: Int,
-        unit: String,
-        frequency: String,
-        trackDuring: List<String>,
-        reminderMessage: String
-    ) {
-        viewModelScope.launch {
-            try {
-                val habit = Habit(
-                    name = name,
-                    category = category,
-                    iconName = selectedIcon.value ?: "ic_habit_default",
-                    color = selectedColor.value ?: "#FFFFFF",
-                    goal = goal,
-                    unit = unit,
-                    frequency = frequency,
-                    trackDuring = trackDuring,
-                    reminders = _reminders.value ?: emptyList(),
-                    reminderMessage = reminderMessage
-                )
-                val insertedId = habitRepository.insertHabit(habit)
-                val savedHabit = habit.copy(id = insertedId.toInt())
-                scheduleReminders(savedHabit)
-                //Log.d("AddEditHabitViewModel", "Habit inserted with id: $insertedId")
-                _saveComplete.value = true
-                _habitAdded.emit(savedHabit)
-            } catch (e: Exception) {
-                //Log.e("AddEditHabitViewModel", "Error saving habit", e)
-                _saveComplete.value = false
-            }
-        }
-    }
-
-    fun loadHabit(habitId: Int) {
-        viewModelScope.launch {
-            try {
-                val loadedHabit = habitRepository.getHabitById(habitId)
-                _habit.value = loadedHabit
-                if (loadedHabit != null) {
-                    _selectedColor.value = loadedHabit.color
-                    _selectedIcon.value = loadedHabit.iconName
-                    _reminders.value = loadedHabit.reminders
-                }
-            } catch (e: Exception) {
-                //Log.e("AddEditHabitViewModel", "Error loading habit", e)
-            }
-        }
-    }
-
-    fun updateHabit(
-        habitId: Int,
-        name: String,
-        category: String,
-        goal: Int,
-        unit: String,
-        frequency: String,
-        trackDuring: List<String>,
-        reminderMessage: String
-    ) {
-        viewModelScope.launch {
-            try {
-                val updatedHabit = Habit(
-                    id = habitId,
-                    name = name,
-                    category = category,
-                    iconName = selectedIcon.value ?: "ic_habit_default",
-                    color = selectedColor.value ?: "#FFFFFF",
-                    goal = goal,
-                    unit = unit,
-                    frequency = frequency,
-                    trackDuring = trackDuring,
-                    reminders = _reminders.value ?: emptyList(),
-                    reminderMessage = reminderMessage
-                )
-                habitRepository.updateHabit(updatedHabit)
-                cancelReminders(habitId)
-                scheduleReminders(updatedHabit)
-                _saveComplete.value = true
-                _habitAdded.emit(updatedHabit)
-            } catch (e: Exception) {
-                //Log.e("AddEditHabitViewModel", "Error updating habit", e)
-                _saveComplete.value = false
-            }
-        }
     }
 
     fun observeWorkStatus(habitId: Int, lifecycleOwner: LifecycleOwner) {
         workManager.getWorkInfosByTagLiveData("reminder_$habitId")
             .observe(lifecycleOwner) { workInfoList ->
                 for (workInfo in workInfoList) {
-                    //Log.d("WorkManager", "Work state for habit $habitId: ${workInfo.state}")
                 }
             }
     }

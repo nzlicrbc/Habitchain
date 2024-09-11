@@ -23,23 +23,22 @@
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/padding_large">
 
-            <ImageView
-                android:id="@+id/imageViewHabitIcon"
+            <TextView
+                android:id="@+id/textViewIcon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/ic_home" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/viewHabitColor"
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
                 android:layout_marginBottom="@dimen/margin_medium"
-                app:layout_constraintBottom_toTopOf="@id/imageViewHabitIcon"
+                app:layout_constraintBottom_toTopOf="@id/textViewIcon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -54,7 +53,7 @@
                 android:textSize="@dimen/text_size_medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/textViewHabitProgress"
-                app:layout_constraintStart_toEndOf="@id/imageViewHabitIcon"
+                app:layout_constraintStart_toEndOf="@id/textViewIcon"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Drink water" />
 

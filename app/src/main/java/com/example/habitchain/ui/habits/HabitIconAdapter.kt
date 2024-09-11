@@ -29,14 +29,14 @@ class HabitIconAdapter(
             if (iconName.length == 2) {
                 binding.textViewIcon.text = iconName
                 binding.textViewIcon.visibility = android.view.View.VISIBLE
-                binding.imageViewIcon.visibility = android.view.View.GONE
+                binding.imageViewIcon.visibility = android.view.View.VISIBLE
             } else {
                 val resourceId = binding.root.context.resources.getIdentifier(
                     iconName, "drawable", binding.root.context.packageName
                 )
                 binding.imageViewIcon.setImageResource(resourceId)
-                binding.imageViewIcon.visibility = android.view.View.VISIBLE
-                binding.textViewIcon.visibility = android.view.View.GONE
+                binding.imageViewIcon.visibility = android.view.View.GONE
+                binding.textViewIcon.visibility = android.view.View.VISIBLE
             }
             binding.root.isSelected = (iconName == selectedIcon())
             binding.root.setOnClickListener { onIconSelected(iconName) }
