@@ -21,7 +21,7 @@ class HabitChainApplication : Application(), Configuration.Provider {
             FirebaseApp.initializeApp(this)
             initializeDatabase()
         } catch (e: Exception) {
-            Log.e("HabitChainApplication", "Error during application initialization", e)
+            //Log.e("HabitChainApplication", "Error during application initialization", e)
         }
     }
 
@@ -29,9 +29,9 @@ class HabitChainApplication : Application(), Configuration.Provider {
         try {
             val db = AppDatabase.getDatabase(this)
             db.openHelper.writableDatabase
-            Log.d("HabitChainApplication", "Database initialized successfully")
+            //Log.d("HabitChainApplication", "Database initialized successfully")
         } catch (e: Exception) {
-            Log.e("HabitChainApplication", "Error initializing database", e)
+            //Log.e("HabitChainApplication", "Error initializing database", e)
         }
     }
 

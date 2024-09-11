@@ -30,12 +30,12 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _authenticationState.value = AuthState.Loading
             try {
-                Log.d("LoginViewModel", LOG_ATTEMPTING_SIGN_IN)
+                //Log.d("LoginViewModel", LOG_ATTEMPTING_SIGN_IN)
                 val user = userRepository.signIn(email, password)
-                Log.d("LoginViewModel", LOG_SIGN_IN_SUCCESSFUL)
+                //Log.d("LoginViewModel", LOG_SIGN_IN_SUCCESSFUL)
                 _authenticationState.value = AuthState.Authenticated(user)
             } catch (e: Exception) {
-                Log.e("LoginViewModel", ERROR_LOGIN_FAILED, e)
+                //Log.e("LoginViewModel", ERROR_LOGIN_FAILED, e)
                 _authenticationState.value = AuthState.Error(e.message ?: ERROR_LOGIN_FAILED)
             }
         }

@@ -6,6 +6,10 @@ import androidx.work.*
 import com.example.habitchain.NotificationWorker
 import com.example.habitchain.data.model.Habit
 import com.example.habitchain.data.repository.HabitRepository
+import com.example.habitchain.utils.Constants.HABIT_ID
+import com.example.habitchain.utils.Constants.HABIT_NAME
+import com.example.habitchain.utils.Constants.HABIT_REMINDER_MESSAGE
+import com.example.habitchain.utils.Constants.HABIT_REMINDER_TIME
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -70,10 +74,10 @@ class AddEditHabitViewModel @Inject constructor(
             val initialDelay = calculateInitialDelay(hour, minute)
 
             val reminderData = workDataOf(
-                "habitId" to habit.id,
-                "habitName" to habit.name,
-                "reminderMessage" to habit.reminderMessage,
-                "reminderTime" to reminderTime
+                HABIT_ID to habit.id,
+                HABIT_NAME to habit.name,
+                HABIT_REMINDER_MESSAGE to habit.reminderMessage,
+                HABIT_REMINDER_TIME to reminderTime
             )
 
             val request = OneTimeWorkRequestBuilder<NotificationWorker>()
@@ -88,10 +92,10 @@ class AddEditHabitViewModel @Inject constructor(
                 request
             )
 
-            Log.d(
+            /*Log.d(
                 "AddEditHabitViewModel",
                 "Scheduled reminder for habit: ${habit.name} at $reminderTime with initial delay: $initialDelay ms"
-            )
+            )*/
         }
     }
 
@@ -113,7 +117,7 @@ class AddEditHabitViewModel @Inject constructor(
 
     private fun cancelReminders(habitId: Int) {
         workManager.cancelAllWorkByTag("reminder_$habitId")
-        Log.d("AddEditHabitViewModel", "Cancelled all reminders for habit: $habitId")
+        //Log.d("AddEditHabitViewModel", "Cancelled all reminders for habit: $habitId")
     }
 
 
@@ -143,11 +147,11 @@ class AddEditHabitViewModel @Inject constructor(
                 val insertedId = habitRepository.insertHabit(habit)
                 val savedHabit = habit.copy(id = insertedId.toInt())
                 scheduleReminders(savedHabit)
-                Log.d("AddEditHabitViewModel", "Habit inserted with id: $insertedId")
+                //Log.d("AddEditHabitViewModel", "Habit inserted with id: $insertedId")
                 _saveComplete.value = true
                 _habitAdded.emit(savedHabit)
             } catch (e: Exception) {
-                Log.e("AddEditHabitViewModel", "Error saving habit", e)
+                //Log.e("AddEditHabitViewModel", "Error saving habit", e)
                 _saveComplete.value = false
             }
         }
@@ -164,7 +168,7 @@ class AddEditHabitViewModel @Inject constructor(
                     _reminders.value = loadedHabit.reminders
                 }
             } catch (e: Exception) {
-                Log.e("AddEditHabitViewModel", "Error loading habit", e)
+                //Log.e("AddEditHabitViewModel", "Error loading habit", e)
             }
         }
     }
@@ -200,7 +204,7 @@ class AddEditHabitViewModel @Inject constructor(
                 _saveComplete.value = true
                 _habitAdded.emit(updatedHabit)
             } catch (e: Exception) {
-                Log.e("AddEditHabitViewModel", "Error updating habit", e)
+                //Log.e("AddEditHabitViewModel", "Error updating habit", e)
                 _saveComplete.value = false
             }
         }
@@ -210,7 +214,7 @@ class AddEditHabitViewModel @Inject constructor(
         workManager.getWorkInfosByTagLiveData("reminder_$habitId")
             .observe(lifecycleOwner) { workInfoList ->
                 for (workInfo in workInfoList) {
-                    Log.d("WorkManager", "Work state for habit $habitId: ${workInfo.state}")
+                    //Log.d("WorkManager", "Work state for habit $habitId: ${workInfo.state}")
                 }
             }
     }

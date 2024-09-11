@@ -6,6 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habitchain.data.repository.HabitRepository
+import com.example.habitchain.utils.Constants.COMPLETED
+import com.example.habitchain.utils.Constants.NOT_DONE
+import com.example.habitchain.utils.Constants.STARTED
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -41,7 +44,7 @@ class StatsViewModel @Inject constructor(
                 updateWeeklyData()
                 updateStats()
             } catch (e: Exception) {
-                Log.e("StatsViewModel", "Error refreshing data", e)
+                //Log.e("StatsViewModel", "Error refreshing data", e)
                 _weeklyData.postValue(emptyList())
                 _stats.postValue(emptyMap())
             }
@@ -71,7 +74,7 @@ class StatsViewModel @Inject constructor(
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
-        Log.d("StatsViewModel", "Weekly data: $weekData")
+        //Log.d("StatsViewModel", "Weekly data: $weekData")
         _weeklyData.postValue(weekData)
     }
 
@@ -82,11 +85,11 @@ class StatsViewModel @Inject constructor(
         val notDoneToday = totalHabits - completedToday
 
         val stats = mapOf(
-            "Started" to totalHabits,
-            "Completed" to completedToday,
-            "NotDone" to notDoneToday
+            STARTED to totalHabits,
+            COMPLETED to completedToday,
+            NOT_DONE to notDoneToday
         )
-        Log.d("StatsViewModel", "Updated stats: $stats")
+        //Log.d("StatsViewModel", "Updated stats: $stats")
         _stats.postValue(stats)
     }
 }

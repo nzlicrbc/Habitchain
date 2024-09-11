@@ -49,7 +49,10 @@ class LoginFragment : Fragment() {
 
     private fun setupSvgAnimation() {
         val animationView = binding.animationView
-        val avd = AnimatedVectorDrawableCompat.create(requireContext(), R.drawable.habit_tracker_animation)
+        val avd = AnimatedVectorDrawableCompat.create(
+            requireContext(),
+            R.drawable.habit_tracker_animation
+        )
         animationView.setImageDrawable(avd)
         avd?.registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
             override fun onAnimationEnd(drawable: Drawable?) {

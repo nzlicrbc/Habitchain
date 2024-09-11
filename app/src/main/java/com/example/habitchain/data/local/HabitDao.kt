@@ -35,7 +35,8 @@ interface HabitDao {
     @Query("SELECT COUNT(*) FROM habit_completions WHERE date(completion_date / 1000, 'unixepoch', 'localtime') = date('now', 'localtime')")
     suspend fun getCompletedHabitsCount(): Int
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             strftime('%w', date(completion_date / 1000, 'unixepoch', 'localtime')) AS day_of_week,
             COUNT(*) AS completion_count
@@ -48,7 +49,10 @@ interface HabitDao {
     suspend fun getHabitCompletionsForLastWeek(startDate: Long): List<DayCompletion>
 
     @Query("SELECT * FROM habit_completions WHERE completion_date BETWEEN :startDate AND :endDate")
-    suspend fun getHabitCompletionsForDateRange(startDate: Long, endDate: Long): List<HabitCompletion>
+    suspend fun getHabitCompletionsForDateRange(
+        startDate: Long,
+        endDate: Long
+    ): List<HabitCompletion>
 
     @Query("DELETE FROM habit_completions WHERE completion_date BETWEEN :startDate AND :endDate")
     suspend fun removeHabitCompletionsForDateRange(startDate: Long, endDate: Long)
@@ -59,13 +63,15 @@ interface HabitDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHabitCompletion(completion: HabitCompletion)
 
-    @Query("""
+    @Query(
+        """
         SELECT COUNT(DISTINCT hc.habit_id)
         FROM habit_completions hc
         JOIN habits h ON h.id = hc.habit_id
         WHERE date(hc.completion_date / 1000, 'unixepoch', 'localtime') = date(:date / 1000, 'unixepoch', 'localtime')
         AND h.isCompleted = 1
-    """)
+    """
+    )
     suspend fun getCompletedHabitsCountForDate(date: Date): Int
 }
 

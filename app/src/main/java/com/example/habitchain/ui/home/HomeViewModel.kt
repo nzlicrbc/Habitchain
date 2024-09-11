@@ -68,7 +68,8 @@ class HomeViewModel @Inject constructor(
         val today = Calendar.getInstance()
 
         return if (selectedDate.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
-            selectedDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
+            selectedDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
+        ) {
             habits
         } else {
             val completionsForDate = habitRepository.getHabitCompletionsForDate(selectedDate)

@@ -17,12 +17,22 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.habitchain.R
 import com.example.habitchain.data.model.Habit
 import com.example.habitchain.databinding.FragmentAddEditHabitBinding
+import com.example.habitchain.utils.Constants.AFTERNOON
+import com.example.habitchain.utils.Constants.ALL_DAY
+import com.example.habitchain.utils.Constants.DAY
 import com.example.habitchain.utils.Constants.ERROR_GOAL_INVALID
 import com.example.habitchain.utils.Constants.ERROR_NAME_EMPTY
 import com.example.habitchain.utils.Constants.ERROR_SAVING_HABIT
 import com.example.habitchain.utils.Constants.ERROR_UNIT_EMPTY
+import com.example.habitchain.utils.Constants.EVENING
+import com.example.habitchain.utils.Constants.MONTH
+import com.example.habitchain.utils.Constants.MORNING
+import com.example.habitchain.utils.Constants.OKEY
+import com.example.habitchain.utils.Constants.SELECT_COLOR
+import com.example.habitchain.utils.Constants.SELECT_ICON
 import com.example.habitchain.utils.Constants.SUCCESS_HABIT_SAVED
 import com.example.habitchain.utils.Constants.TIME_PICKER_TITLE
+import com.example.habitchain.utils.Constants.WEEK
 import com.google.android.material.chip.Chip
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -96,21 +106,24 @@ class AddEditHabitFragment : Fragment() {
         iconAdapter.submitList(icons)
 
         val dialogView = layoutInflater.inflate(R.layout.dialog_icon_selection, null)
-        val recyclerView = dialogView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerViewIcons)
+        val recyclerView =
+            dialogView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerViewIcons)
         recyclerView.layoutManager = GridLayoutManager(context, 4)
         recyclerView.adapter = iconAdapter
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Select Icon")
+            .setTitle(SELECT_ICON)
             .setView(dialogView)
-            .setPositiveButton("OK", null)
+            .setPositiveButton(OKEY, null)
             .show()
     }
 
     private fun showColorSelectionDialog() {
-        val colors = listOf("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF",
+        val colors = listOf(
+            "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF",
             "#800000", "#008000", "#000080", "#808000", "#800080", "#008080",
-            "#FFA500", "#FFC0CB", "#800000", "#FA8072", "#90EE90", "#ADD8E6")
+            "#FFA500", "#FFC0CB", "#800000", "#FA8072", "#90EE90", "#ADD8E6"
+        )
         colorAdapter = HabitColorAdapter(
             onColorSelected = {
                 viewModel.setSelectedColor(it)
@@ -121,14 +134,15 @@ class AddEditHabitFragment : Fragment() {
         colorAdapter.submitList(colors)
 
         val dialogView = layoutInflater.inflate(R.layout.dialog_color_selection, null)
-        val recyclerView = dialogView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerViewColors)
+        val recyclerView =
+            dialogView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerViewColors)
         recyclerView.layoutManager = GridLayoutManager(context, 6)
         recyclerView.adapter = colorAdapter
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Select Color")
+            .setTitle(SELECT_COLOR)
             .setView(dialogView)
-            .setPositiveButton("OK", null)
+            .setPositiveButton(OKEY, null)
             .show()
     }
 
@@ -141,7 +155,7 @@ class AddEditHabitFragment : Fragment() {
     }
 
     private fun setupFrequencySpinner() {
-        val frequencies = arrayOf("Day", "Week", "Month")
+        val frequencies = arrayOf(DAY, WEEK, MONTH)
         val adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, frequencies)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -149,7 +163,7 @@ class AddEditHabitFragment : Fragment() {
     }
 
     private fun setupTrackDuringChips() {
-        val trackDuringOptions = listOf("All Day", "Morning", "Afternoon", "Evening")
+        val trackDuringOptions = listOf(ALL_DAY, MORNING, AFTERNOON, EVENING)
         trackDuringOptions.forEach { option ->
             val chip = Chip(context).apply {
                 text = option
@@ -184,7 +198,8 @@ class AddEditHabitFragment : Fragment() {
             .build()
 
         picker.addOnPositiveButtonClickListener {
-            val selectedTime = String.format(Locale.getDefault(), "%02d:%02d", picker.hour, picker.minute)
+            val selectedTime =
+                String.format(Locale.getDefault(), "%02d:%02d", picker.hour, picker.minute)
             viewModel.addReminder(selectedTime)
         }
 
@@ -299,9 +314,9 @@ class AddEditHabitFragment : Fragment() {
 
     private fun getFrequencyIndex(frequency: String): Int {
         return when (frequency) {
-            "Day" -> 0
-            "Week" -> 1
-            "Month" -> 2
+            DAY -> 0
+            WEEK -> 1
+            MONTH -> 2
             else -> 0
         }
     }

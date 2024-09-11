@@ -3,7 +3,7 @@
     <string name="channel_name">Habit Reminders</string>
     <string name="channel_description">Notifications for habit reminders</string>
     <string name="habit_name">Name</string>
-    <string name="hint_name">Name</string>
+    <string name="hint_name">Habit Name</string>
     <string name="icon_amp_color_text"><![CDATA[Icon & Color]]></string>
     <string name="goal_amp_goal_period_text"><![CDATA[Goal & Goal Period]]></string>
     <string name="units_text">units</string>

@@ -13,29 +13,21 @@
             android:id="@+id/textViewCategoryName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:textColor="@color/black"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/textViewHabitNameLabel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textViewHabitNameLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/habit_name"
-            android:textSize="@dimen/text_size_small"
-            app:layout_constraintBottom_toTopOf="@id/editTextHabitName"
-            app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
             android:id="@+id/editTextHabitName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
             android:hint="@string/hint_name"
             android:inputType="text"
-            app:layout_constraintBottom_toTopOf="@id/textViewHabitNameLabel"
+            app:layout_constraintBottom_toTopOf="@id/textViewCategoryName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewIconColorLabel" />
@@ -46,6 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:text="Icon &amp; Color"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/editTextHabitName" />
 
@@ -53,8 +47,8 @@
             android:id="@+id/layoutIconColorSelection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@id/textViewIconColorLabel">
 
             <LinearLayout
@@ -62,54 +56,56 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:text="Icon"
-                    android:layout_gravity="center"/>
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/textViewSelectedIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textSize="24sp"
-                    android:layout_marginLeft="@dimen/margin_medium"/>
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:textSize="@dimen/text_size_xlarge" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/darker_gray"
-                android:layout_marginHorizontal="8dp"/>
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@android:color/darker_gray" />
 
             <LinearLayout
                 android:id="@+id/layoutColorSelection"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:text="Color"
-                    android:layout_gravity="center"/>
+                    android:textColor="@color/black" />
 
                 <View
                     android:id="@+id/viewSelectedColor"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginLeft="@dimen/margin_medium"
-                    android:background="@drawable/circle_background"/>
+                    android:background="@drawable/circle_background" />
 
             </LinearLayout>
 
@@ -119,9 +115,10 @@
             android:id="@+id/textViewGoalLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_large"
             android:text="@string/goal_amp_goal_period_text"
-            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutIconColorSelection" />
 
@@ -170,8 +167,10 @@
             android:id="@+id/textViewTrackDuringLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_large"
             android:text="@string/track_during_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutGoal" />
 
@@ -188,8 +187,10 @@
             android:id="@+id/textViewRemindersLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_large"
             android:text="@string/reminders_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/chipGroupTrackDuring" />
 

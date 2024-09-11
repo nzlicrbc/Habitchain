@@ -19,12 +19,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
+            android:textColor="@color/black"
             android:textSize="@dimen/text_size_xlarge" />
 
         <TextView
             android:id="@+id/textViewCategoryName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="bold" />
 

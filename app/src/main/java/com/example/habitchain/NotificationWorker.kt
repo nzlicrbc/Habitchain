@@ -13,6 +13,13 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.habitchain.data.repository.HabitRepository
 import com.example.habitchain.ui.main.MainActivity
+import com.example.habitchain.utils.Constants.CHANNEL_ID
+import com.example.habitchain.utils.Constants.HABIT_CHANNEL_DESCRIPTION
+import com.example.habitchain.utils.Constants.HABIT_CHANNEL_NAME
+import com.example.habitchain.utils.Constants.HABIT_ID
+import com.example.habitchain.utils.Constants.HABIT_NAME
+import com.example.habitchain.utils.Constants.HABIT_REMINDER_MESSAGE
+import com.example.habitchain.utils.Constants.HABIT_REMINDER_TIME
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -24,24 +31,24 @@ class NotificationWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
-        val habitId = inputData.getInt("habitId", -1)
-        val habitName = inputData.getString("habitName") ?: return Result.failure()
-        val reminderMessage = inputData.getString("reminderMessage") ?: ""
-        val reminderTime = inputData.getString("reminderTime") ?: ""
+        val habitId = inputData.getInt(HABIT_ID, -1)
+        val habitName = inputData.getString(HABIT_NAME) ?: return Result.failure()
+        val reminderMessage = inputData.getString(HABIT_REMINDER_MESSAGE) ?: ""
+        val reminderTime = inputData.getString(HABIT_REMINDER_TIME) ?: ""
 
-        Log.d("NotificationWorker", "Preparing notification for habit: $habitName at $reminderTime")
+        //Log.d("NotificationWorker", "Preparing notification for habit: $habitName at $reminderTime")
 
         if (habitId == -1) {
-            Log.e("NotificationWorker", "Invalid habitId")
+            //Log.e("NotificationWorker", "Invalid habitId")
             return Result.failure()
         }
 
         val habit = habitRepository.getHabitById(habitId)
         if (habit == null || habit.isCompleted) {
-            Log.d(
+            /*Log.d(
                 "NotificationWorker",
                 "Habit $habitName is completed or doesn't exist. Skipping notification."
-            )
+            )*/
             return Result.success()
         }
 
@@ -67,9 +74,9 @@ class NotificationWorker @AssistedInject constructor(
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = "HabitChainChannel"
-            val channelName = "Habit Reminders"
-            val channelDescription = "Notifications for habit reminders"
+            val channelId = CHANNEL_ID
+            val channelName = HABIT_CHANNEL_NAME
+            val channelDescription = HABIT_CHANNEL_DESCRIPTION
             val importance = NotificationManager.IMPORTANCE_HIGH
 
             var channel: NotificationChannel? =
@@ -94,6 +101,6 @@ class NotificationWorker @AssistedInject constructor(
             .priority = NotificationCompat.PRIORITY_HIGH
 
         notificationManager.notify(habitId * 10000 + reminderTime.hashCode(), builder.build())
-        Log.d("NotificationWorker", "Notification sent for habit: $habitName at $reminderTime")
+        //Log.d("NotificationWorker", "Notification sent for habit: $habitName at $reminderTime")
     }
 }

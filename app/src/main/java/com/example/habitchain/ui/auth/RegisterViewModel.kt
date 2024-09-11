@@ -26,12 +26,12 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             _registrationState.value = RegistrationState.Loading
             try {
-                Log.d("RegisterViewModel", "$LOG_REGISTER_ATTEMPT$email")
+                //Log.d("RegisterViewModel", "$LOG_REGISTER_ATTEMPT$email")
                 val user = userRepository.signUp(email, password)
-                Log.d("RegisterViewModel", LOG_REGISTER_SUCCESS)
+                //Log.d("RegisterViewModel", LOG_REGISTER_SUCCESS)
                 _registrationState.value = RegistrationState.Success(user)
             } catch (e: Exception) {
-                Log.e("RegisterViewModel", ERROR_REGISTRATION_FAILED, e)
+                //Log.e("RegisterViewModel", ERROR_REGISTRATION_FAILED, e)
                 _registrationState.value =
                     RegistrationState.Error(e.message ?: ERROR_REGISTRATION_FAILED)
             }

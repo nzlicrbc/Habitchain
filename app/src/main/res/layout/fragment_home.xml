@@ -35,7 +35,7 @@
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_small"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"

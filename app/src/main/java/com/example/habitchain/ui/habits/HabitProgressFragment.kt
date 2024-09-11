@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.habitchain.databinding.FragmentHabitProgressBinding
 import com.example.habitchain.databinding.DialogManualInputBinding
+import com.example.habitchain.utils.Constants.CANCEL
+import com.example.habitchain.utils.Constants.ENTER_PROGRESS
+import com.example.habitchain.utils.Constants.UPDATE
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -65,15 +68,15 @@ class HabitProgressFragment : Fragment() {
         val dialogBinding = DialogManualInputBinding.inflate(layoutInflater)
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Enter Progress")
+            .setTitle(ENTER_PROGRESS)
             .setView(dialogBinding.root)
-            .setPositiveButton("Update") { _, _ ->
+            .setPositiveButton(UPDATE) { _, _ ->
                 val input = dialogBinding.editTextManualInput.text?.toString() ?: ""
                 input.toIntOrNull()?.let { progress ->
                     viewModel.updateProgress(progress)
                 }
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(CANCEL, null)
             .show()
     }
 

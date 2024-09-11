@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
+        android:textColor="@color/black"
         android:textSize="@dimen/text_size_medium"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/viewPagerWeeks"
@@ -31,6 +32,7 @@
         android:layout_height="200dp"
         android:layout_marginTop="@dimen/margin_medium"
         android:progress="60"
+        app:indicatorColor="@color/blue"
         app:indicatorSize="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,6 +43,7 @@
         android:id="@+id/textViewProgressPercentage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:textSize="@dimen/text_size_xlarge"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/circularProgressBar"
@@ -66,12 +69,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/started_text"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_small" />
 
             <TextView
                 android:id="@+id/textViewStarted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -86,12 +91,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/completed_text"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_small" />
 
             <TextView
                 android:id="@+id/textViewCompleted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -106,12 +113,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/not_done_text"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_small" />
 
             <TextView
                 android:id="@+id/textViewNotDone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
         </LinearLayout>

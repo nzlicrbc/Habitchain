@@ -13,6 +13,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.habitchain.R
 import com.example.habitchain.databinding.FragmentStatsBinding
 import com.example.habitchain.ui.home.WeekAdapter
+import com.example.habitchain.utils.Constants.COMPLETED
+import com.example.habitchain.utils.Constants.NOT_DONE
+import com.example.habitchain.utils.Constants.STARTED
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -138,23 +141,23 @@ class StatsFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.stats.observe(viewLifecycleOwner) { stats ->
-            Log.d("StatsFragment", "Received stats update: $stats")
+            //Log.d("StatsFragment", "Received stats update: $stats")
             updateStats(stats)
         }
 
         viewModel.weeklyData.observe(viewLifecycleOwner) { weeklyData ->
-            Log.d("StatsFragment", "Received weekly data update: $weeklyData")
+            //Log.d("StatsFragment", "Received weekly data update: $weeklyData")
             updateBarChart(weeklyData)
         }
     }
 
     private fun updateStats(stats: Map<String, Int>) {
-        binding.textViewStarted.text = stats["Started"].toString()
-        binding.textViewCompleted.text = stats["Completed"].toString()
-        binding.textViewNotDone.text = stats["NotDone"].toString()
+        binding.textViewStarted.text = stats[STARTED].toString()
+        binding.textViewCompleted.text = stats[COMPLETED].toString()
+        binding.textViewNotDone.text = stats[NOT_DONE].toString()
 
-        val completed = stats["Completed"] ?: 0
-        val total = stats["Started"] ?: 1
+        val completed = stats[COMPLETED] ?: 0
+        val total = stats[STARTED] ?: 1
         val percentage = if (total > 0) (completed * 100 / total).coerceIn(0, 100) else 0
         binding.circularProgressBar.progress = percentage
         binding.textViewProgressPercentage.text = "$percentage%"
@@ -166,7 +169,7 @@ class StatsFragment : Fragment() {
         }
 
         val dataSet = BarDataSet(entries, "Completed Habits").apply {
-            color = ContextCompat.getColor(requireContext(), R.color.purple_500)
+            color = ContextCompat.getColor(requireContext(), R.color.light_blue)
             valueTextColor = Color.BLACK
             valueTextSize = 12f
         }

@@ -39,9 +39,9 @@ class MainActivity : AppCompatActivity() {
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
-                Log.d("MainActivity", "Notification permission granted")
+                //Log.d("MainActivity", "Notification permission granted")
             } else {
-                Log.d("MainActivity", "Notification permission denied")
+                //Log.d("MainActivity", "Notification permission denied")
             }
         }
 
@@ -50,9 +50,9 @@ class MainActivity : AppCompatActivity() {
 
         if (FirebaseApp.getApps(this).isEmpty()) {
             FirebaseApp.initializeApp(this)
-            Log.d("MainActivity", "Firebase initialized")
+            //Log.d("MainActivity", "Firebase initialized")
         } else {
-            Log.d("MainActivity", "Firebase already initialized")
+            //Log.d("MainActivity", "Firebase already initialized")
         }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -82,9 +82,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (userRepository.isFirebaseInitialized()) {
-            Log.d("MainActivity", "Firebase is initialized")
+            //Log.d("MainActivity", "Firebase is initialized")
         } else {
-            Log.e("MainActivity", "Firebase is not initialized")
+            //Log.e("MainActivity", "Firebase is not initialized")
         }
 
         createNotificationChannel()

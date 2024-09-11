@@ -1,6 +1,7 @@
 package com.example.habitchain.data.local
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -30,10 +31,12 @@ abstract class AppDatabase : RoomDatabase() {
                 )
                     .addCallback(object : RoomDatabase.Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
+                            //Log.d("AppDatabase", "Database created")
                             super.onCreate(db)
                         }
 
                         override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
+                            //Log.d("AppDatabase", "Destructive migration performed")
                             super.onDestructiveMigration(db)
                         }
                     })

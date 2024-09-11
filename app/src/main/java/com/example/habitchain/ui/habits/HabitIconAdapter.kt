@@ -13,7 +13,8 @@ class HabitIconAdapter(
 ) : ListAdapter<String, HabitIconAdapter.IconViewHolder>(IconDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IconViewHolder {
-        val binding = ItemHabitIconBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemHabitIconBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return IconViewHolder(binding)
     }
 
@@ -44,6 +45,7 @@ class HabitIconAdapter(
 
     class IconDiffCallback : DiffUtil.ItemCallback<String>() {
         override fun areItemsTheSame(oldItem: String, newItem: String): Boolean = oldItem == newItem
-        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean = oldItem == newItem
+        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean =
+            oldItem == newItem
     }
 }

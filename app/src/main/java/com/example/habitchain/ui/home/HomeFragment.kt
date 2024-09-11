@@ -18,6 +18,7 @@ import com.example.habitchain.ui.habits.HabitAdapter
 import com.example.habitchain.utils.Constants.FILTER_TEXT_ACTIVE
 import com.example.habitchain.utils.Constants.FILTER_TEXT_ALL
 import com.example.habitchain.utils.Constants.FILTER_TEXT_COMPLETED
+import com.example.habitchain.utils.Constants.TODAY
 import com.example.habitchain.utils.SwipeActionCallback
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -90,7 +91,7 @@ class HomeFragment : Fragment() {
         val displayText = if (selectedDate.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
             selectedDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
         ) {
-            "Today"
+            TODAY
         } else {
             dateFormat.format(selectedDate.time)
         }
