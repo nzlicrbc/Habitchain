@@ -51,6 +51,10 @@ class AddEditHabitViewModel @Inject constructor(
     private val _habitAdded = MutableSharedFlow<Habit>()
     val habitAdded = _habitAdded.asSharedFlow()
 
+    init {
+        _reminders.value = emptyList()
+    }
+
     fun loadHabit(habitId: Int) {
         viewModelScope.launch {
             _habit.value = habitRepository.getHabitById(habitId)

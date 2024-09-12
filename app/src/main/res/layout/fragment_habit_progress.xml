@@ -16,7 +16,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Habit Name" />
+        tools:text="@string/habit_name" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardViewProgress"
@@ -75,7 +75,7 @@
                 android:layout_height="56dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:contentDescription="Decrease"
+                android:contentDescription="@string/decrease"
                 android:focusable="true"
                 android:src="@drawable/ic_remove"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -88,7 +88,7 @@
                 android:layout_height="56dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:contentDescription="Increase"
+                android:contentDescription="@string/increase"
                 android:focusable="true"
                 android:src="@drawable/ic_add"
                 app:layout_constraintBottom_toBottomOf="parent"

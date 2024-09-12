@@ -16,6 +16,7 @@ import com.example.habitchain.ui.home.WeekAdapter
 import com.example.habitchain.utils.Constants.COMPLETED
 import com.example.habitchain.utils.Constants.NOT_DONE
 import com.example.habitchain.utils.Constants.STARTED
+import com.example.habitchain.utils.formatToFullString
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -110,8 +111,7 @@ class StatsFragment : Fragment() {
     }
 
     private fun updateDateDisplay(selectedDate: Calendar) {
-        val dateFormat = SimpleDateFormat("EEEE d", Locale.getDefault())
-        binding.textViewCurrentDate.text = dateFormat.format(selectedDate.time)
+        binding.textViewCurrentDate.text = selectedDate.time.formatToFullString()
     }
 
     private fun createWeeks(): List<List<Calendar>> {

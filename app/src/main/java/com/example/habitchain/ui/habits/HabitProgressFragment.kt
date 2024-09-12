@@ -10,6 +10,7 @@ import com.example.habitchain.databinding.FragmentHabitProgressBinding
 import com.example.habitchain.databinding.DialogManualInputBinding
 import com.example.habitchain.utils.Constants.CANCEL
 import com.example.habitchain.utils.Constants.ENTER_PROGRESS
+import com.example.habitchain.utils.Constants.HABIT_ID
 import com.example.habitchain.utils.Constants.UPDATE
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,8 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HabitProgressFragment : Fragment() {
 
-    private var _binding: FragmentHabitProgressBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentHabitProgressBinding
     private val viewModel: HabitProgressViewModel by viewModels()
 
     override fun onCreateView(
@@ -26,7 +26,7 @@ class HabitProgressFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHabitProgressBinding.inflate(inflater, container, false)
+        binding = FragmentHabitProgressBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -35,7 +35,7 @@ class HabitProgressFragment : Fragment() {
         setupObservers()
         setupListeners()
 
-        arguments?.getInt("habitId")?.let { habitId ->
+        arguments?.getInt(HABIT_ID)?.let { habitId ->
             viewModel.loadHabit(habitId)
         }
     }
@@ -78,10 +78,5 @@ class HabitProgressFragment : Fragment() {
             }
             .setNegativeButton(CANCEL, null)
             .show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

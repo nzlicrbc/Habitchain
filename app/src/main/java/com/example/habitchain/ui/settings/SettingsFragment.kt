@@ -13,9 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SettingsFragment : Fragment() {
-
     private lateinit var binding: FragmentSettingsBinding
-
     private val viewModel: SettingsViewModel by viewModels()
 
     override fun onCreateView(

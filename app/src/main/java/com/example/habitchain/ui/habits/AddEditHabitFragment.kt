@@ -3,6 +3,7 @@ package com.example.habitchain.ui.habits
 import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,8 +68,8 @@ class AddEditHabitFragment : Fragment() {
         setupUI()
         observeViewModel()
 
-        if (args.habitId != null) {
-            viewModel.loadHabit(args.habitId!!)
+        args.habitId?.let { id ->
+            viewModel.loadHabit(id)
         }
     }
 
@@ -118,7 +119,6 @@ class AddEditHabitFragment : Fragment() {
                             binding.chipGroupTrackingDays.visibility = View.VISIBLE
                             setupWeekDayChips()
                         }
-
                         MONTH -> {
                             binding.chipGroupTrackingDays.visibility = View.VISIBLE
                             setupMonthDayChips()
@@ -166,7 +166,14 @@ class AddEditHabitFragment : Fragment() {
     }
 
     private fun showIconSelectionDialog() {
-        val icons = listOf("🏃", "💪", "🏋️", "🚴", "🏊", "🧘", "📚", "🎨", "🎵", "🌱", "🍎", "💧")
+        val icons = listOf(
+            "🌞", "💧", "🚰", "🥤", "🚴", "🏊", "👟", "🍇", "🥑", "🍓", "🚀", "🌟", "📈", "💖", "💅",
+            "🎊", "🥳", "😟", "😣", "😓", "😊", "😄", "👍", "🙌", "🤝", "🎉", "🧹", "🧽", "🧼", "🎯", "🏹", "💰",
+            "📊", "💸", "🌿", "🌱", "🚲", "🌍", "🎨", "✏️", "🎸", "🎶", "💼", "🧺", "🌳", "🌿",
+            "🌸", "🛌", "😴", "🌙", "🍏", "🥗", "🍎", "🏋️", "🏃‍♀️", "🚴", "🏊", "📚", "💡", "🧠", "⏰", "🕒",
+            "📅", "✔️", "✅", "🏆"
+        )
+
         iconAdapter = HabitIconAdapter(
             onIconSelected = {
                 viewModel.setSelectedIcon(it)
@@ -309,7 +316,9 @@ class AddEditHabitFragment : Fragment() {
         val name = binding.editTextHabitName.text.toString().trim()
         val goal = binding.editTextGoal.text.toString().toIntOrNull() ?: 0
         val unit = binding.editTextUnit.text.toString().trim()
+
         val frequency = binding.spinnerGoalPeriod.selectedItem.toString()
+
         val trackDuring = binding.chipGroupTrackDuring.checkedChipIds.map { id ->
             (binding.chipGroupTrackDuring.findViewById<Chip>(id)).text.toString()
         }
@@ -365,10 +374,20 @@ class AddEditHabitFragment : Fragment() {
         }
     }
 
+    private fun getFrequencyIndex(frequency: String): Int {
+        return when (frequency) {
+            DAY -> 0
+            WEEK -> 1
+            MONTH -> 2
+            else -> 0
+        }
+    }
+
     private fun populateUI(habit: Habit) {
         binding.editTextHabitName.setText(habit.name)
         binding.editTextGoal.setText(habit.goal.toString())
         binding.editTextUnit.setText(habit.unit)
+
         binding.spinnerGoalPeriod.setSelection(getFrequencyIndex(habit.frequency))
 
         habit.trackDuring.forEach { trackDuring ->
@@ -390,14 +409,5 @@ class AddEditHabitFragment : Fragment() {
         }
 
         binding.editTextReminderMessage.setText(habit.reminderMessage)
-    }
-
-    private fun getFrequencyIndex(frequency: String): Int {
-        return when (frequency) {
-            DAY -> 0
-            WEEK -> 1
-            MONTH -> 2
-            else -> 0
-        }
     }
 }

@@ -36,4 +36,10 @@
     <string name="completed_text">Completed</string>
     <string name="not_done_text">Not Done</string>
     <string name="add_habit_text">Tap "+" to add a habit.</string>
+    <string name="enter_progress">Enter progress</string>
+    <string name="icon_amp_color"><![CDATA[Icon & Color]]></string>
+    <string name="icon">Icon</string>
+    <string name="color">Color</string>
+    <string name="decrease">Decrease</string>
+    <string name="increase">Increase</string>
 </resources>

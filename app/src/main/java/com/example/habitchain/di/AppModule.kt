@@ -7,6 +7,7 @@ import androidx.work.WorkManager
 import com.example.habitchain.data.api.QuoteApiService
 import com.example.habitchain.data.local.AppDatabase
 import com.example.habitchain.data.local.HabitDao
+import com.example.habitchain.ui.habits.HabitAdapter
 import com.example.habitchain.utils.Constants.DATABASE_NAME
 import com.example.habitchain.utils.Constants.QUOTE_API_BASE_URL
 import com.example.habitchain.utils.Constants.SHARED_PREFERENCES_NAME
@@ -37,6 +38,12 @@ object AppModule {
     }
 
     @Provides
+    @Singleton
+    fun provideHabitAdapter(): HabitAdapter {
+        return HabitAdapter()
+    }
+
+    @Provides
     fun provideHabitDao(appDatabase: AppDatabase): HabitDao {
         return appDatabase.habitDao()
     }
@@ -56,7 +63,7 @@ object AppModule {
     @Singleton
     fun provideQuoteApiService(okHttpClient: OkHttpClient): QuoteApiService {
         return Retrofit.Builder()
-            .baseUrl("https://zenquotes.io/api/")
+            .baseUrl(QUOTE_API_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

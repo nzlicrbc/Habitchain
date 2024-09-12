@@ -6,14 +6,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habitchain.data.model.Habit
 import com.example.habitchain.data.model.Quote
+import com.example.habitchain.data.model.HabitCompletion
 import com.example.habitchain.data.repository.HabitRepository
 import com.example.habitchain.data.repository.QuoteRepository
+import com.example.habitchain.utils.Constants.DAY
 import com.example.habitchain.utils.Constants.ERROR_DELETE_HABIT
 import com.example.habitchain.utils.Constants.ERROR_FETCH_HABITS
 import com.example.habitchain.utils.Constants.ERROR_FETCH_QUOTE
 import com.example.habitchain.utils.Constants.FILTER_TEXT_ACTIVE
 import com.example.habitchain.utils.Constants.FILTER_TEXT_ALL
 import com.example.habitchain.utils.Constants.FILTER_TEXT_COMPLETED
+import com.example.habitchain.utils.Constants.MONTH
+import com.example.habitchain.utils.Constants.WEEK
+import com.example.habitchain.utils.getDayOfWeek
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -69,9 +74,9 @@ class HomeViewModel @Inject constructor(
 
         return habits.filter { habit ->
             when (habit.frequency) {
-                "Day" -> true
-                "Week" -> habit.trackingDays.contains(getDayOfWeek(selectedDate))
-                "Month" -> habit.trackingDays.contains(
+                DAY -> true
+                WEEK -> habit.trackingDays.contains(getDayOfWeek(selectedDate))
+                MONTH -> habit.trackingDays.contains(
                     selectedDate.get(Calendar.DAY_OF_MONTH).toString()
                 )
 
@@ -83,7 +88,7 @@ class HomeViewModel @Inject constructor(
             ) {
                 habit
             } else {
-                val completionsForDate = habitRepository.getHabitCompletionsForDate(selectedDate)
+                val completionsForDate = getHabitCompletionsForDate(selectedDate)
                 val isCompletedForSelectedDate = completionsForDate.any { it.habitId == habit.id }
                 habit.copy(
                     isCompleted = isCompletedForSelectedDate,
@@ -109,12 +114,54 @@ class HomeViewModel @Inject constructor(
     fun updateHabitCompletion(habitId: Int, completed: Boolean) {
         viewModelScope.launch {
             try {
-                habitRepository.updateHabitCompletion(habitId, completed)
+                val habit = habitRepository.getHabitById(habitId)
+                habit?.let {
+                    val updatedHabit = it.copy(isCompleted = completed)
+                    habitRepository.updateHabit(updatedHabit)
+                    if (completed) {
+                        addHabitCompletion(habitId)
+                    } else {
+                        removeHabitCompletion(habitId)
+                    }
+                }
                 fetchHabits()
             } catch (e: Exception) {
                 _error.value = "$ERROR_FETCH_HABITS ${e.message}"
             }
         }
+    }
+
+    private suspend fun addHabitCompletion(habitId: Int) {
+        val completion = HabitCompletion(habitId = habitId)
+        habitRepository.addHabitCompletion(completion)
+    }
+
+    private suspend fun removeHabitCompletion(habitId: Int) {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val todayStart = calendar.timeInMillis
+        habitRepository.removeHabitCompletionForToday(habitId, todayStart)
+    }
+
+    private suspend fun getHabitCompletionsForDate(date: Calendar): List<HabitCompletion> {
+        val startOfDay = date.apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+
+        val endOfDay = date.apply {
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+            set(Calendar.MILLISECOND, 999)
+        }.timeInMillis
+
+        return habitRepository.getHabitCompletionsForDateRange(startOfDay, endOfDay)
     }
 
     private fun fetchQuote() {
@@ -146,7 +193,8 @@ class HomeViewModel @Inject constructor(
     fun deleteHabit(habitId: Int) {
         viewModelScope.launch {
             try {
-                habitRepository.deleteHabit(habitId)
+                val habit = habitRepository.getHabitById(habitId)
+                habit?.let { habitRepository.deleteHabit(it) }
                 fetchHabits()
             } catch (e: Exception) {
                 _error.value = "$ERROR_DELETE_HABIT: ${e.message}"

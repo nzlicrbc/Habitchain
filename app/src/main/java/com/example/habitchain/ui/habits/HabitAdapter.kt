@@ -9,26 +9,17 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habitchain.data.model.Habit
 import com.example.habitchain.databinding.ItemHabitBinding
+import javax.inject.Inject
 
-class HabitAdapter(
-    private val onItemClicked: (Habit) -> Unit,
-    private val onCompletionToggled: (Habit?, Boolean) -> Unit,
-    private val onDeleteClicked: (Habit) -> Unit
-) : ListAdapter<Habit, HabitAdapter.HabitViewHolder>(HabitDiffCallback()) {
+class HabitAdapter @Inject constructor() :
+    ListAdapter<Habit, HabitAdapter.HabitViewHolder>(HabitDiffCallback()) {
+
+    var onItemClicked: ((Habit) -> Unit)? = null
+    var onCompletionToggled: ((Habit?, Boolean) -> Unit)? = null
+    var onDeleteClicked: ((Habit) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
-        val viewModel = HabitAdapterViewModel()
         val binding = ItemHabitBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
-        binding.viewModel = viewModel
-
-        binding.checkBoxHabitCompletion.setOnCheckedChangeListener { _, isChecked ->
-            val habit = viewModel.item.get()
-            onCompletionToggled(habit, isChecked)
-            habit?.let {
-                updateProgressText(binding, it, isChecked)
-            }
-        }
         return HabitViewHolder(binding)
     }
 
@@ -41,8 +32,6 @@ class HabitAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(habit: Habit) {
             binding.apply {
-                viewModel?.item?.set(habit)
-
                 textViewHabitName.text = habit.name
                 updateProgressText(binding, habit, habit.isCompleted)
 
@@ -52,7 +41,10 @@ class HabitAdapter(
 
                 checkBoxHabitCompletion.isChecked = habit.isCompleted
 
-                root.setOnClickListener { onItemClicked(habit) }
+                root.setOnClickListener { onItemClicked?.invoke(habit) }
+                checkBoxHabitCompletion.setOnCheckedChangeListener { _, isChecked ->
+                    onCompletionToggled?.invoke(habit, isChecked)
+                }
 
                 executePendingBindings()
             }

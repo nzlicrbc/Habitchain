@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:text="Icon &amp; Color"
+            android:text="@string/icon_amp_color"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_small"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Icon"
+                    android:text="@string/icon"
                     android:textColor="@color/black" />
 
                 <TextView
@@ -97,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Color"
+                    android:text="@string/color"
                     android:textColor="@color/black" />
 
                 <View

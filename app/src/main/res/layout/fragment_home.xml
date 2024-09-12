@@ -45,7 +45,7 @@
             android:id="@+id/textViewQuote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="@dimen/padding_medium"
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_size_small"
             android:textStyle="italic" />

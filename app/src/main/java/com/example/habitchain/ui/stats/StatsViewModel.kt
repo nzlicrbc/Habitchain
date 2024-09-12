@@ -81,7 +81,8 @@ class StatsViewModel @Inject constructor(
     private suspend fun updateStats() {
         val habits = habitRepository.getAllHabits().first()
         val totalHabits = habits.size
-        val completedToday = habitRepository.getCompletedHabitsCountForDate(Calendar.getInstance().time)
+        val completedToday =
+            habitRepository.getCompletedHabitsCountForDate(Calendar.getInstance().time)
         val notDoneToday = totalHabits - completedToday
 
         val stats = mapOf(

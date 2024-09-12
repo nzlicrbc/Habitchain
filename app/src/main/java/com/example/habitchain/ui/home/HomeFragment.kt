@@ -20,16 +20,21 @@ import com.example.habitchain.utils.Constants.FILTER_TEXT_ALL
 import com.example.habitchain.utils.Constants.FILTER_TEXT_COMPLETED
 import com.example.habitchain.utils.Constants.TODAY
 import com.example.habitchain.utils.SwipeActionCallback
+import com.example.habitchain.utils.formatToFullString
+import com.example.habitchain.utils.formatToString
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-
     private lateinit var binding: FragmentHomeBinding
+
     private val viewModel: HomeViewModel by viewModels()
-    private lateinit var habitAdapter: HabitAdapter
+
+    @Inject
+    lateinit var habitAdapter: HabitAdapter
     private lateinit var weekAdapter: WeekAdapter
 
     override fun onCreateView(
@@ -50,8 +55,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupUI() {
-        val dateFormat = SimpleDateFormat("EEEE, MMMM d", Locale.getDefault())
-        binding.textViewToday.text = dateFormat.format(Date())
+        binding.textViewToday.text = Date().formatToFullString()
         setupWeekView()
     }
 
@@ -82,13 +86,12 @@ class HomeFragment : Fragment() {
 
     private fun updateDateDisplay(selectedDate: Calendar) {
         val today = Calendar.getInstance()
-        val dateFormat = SimpleDateFormat("MMMM d", Locale.getDefault())
         val displayText = if (selectedDate.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
             selectedDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
         ) {
             TODAY
         } else {
-            dateFormat.format(selectedDate.time)
+            selectedDate.time.formatToString()
         }
         binding.textViewToday.text = displayText
     }
@@ -114,19 +117,18 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        habitAdapter = HabitAdapter(
-            onItemClicked = { habit ->
-                val action =
-                    HomeFragmentDirections.actionNavigationHomeToHabitProgressFragment(habit.id)
-                findNavController().navigate(action)
-            },
-            onCompletionToggled = { habit, isCompleted ->
-                habit?.id?.let { viewModel.updateHabitCompletion(it, isCompleted) }
-            },
-            onDeleteClicked = { habit ->
-                viewModel.deleteHabit(habit.id)
-            }
-        )
+        habitAdapter.onItemClicked = { habit ->
+            val action =
+                HomeFragmentDirections.actionNavigationHomeToHabitProgressFragment(habit.id)
+            findNavController().navigate(action)
+        }
+        habitAdapter.onCompletionToggled = { habit, isCompleted ->
+            habit?.id?.let { viewModel.updateHabitCompletion(it, isCompleted) }
+        }
+        habitAdapter.onDeleteClicked = { habit ->
+            viewModel.deleteHabit(habit.id)
+        }
+
         binding.recyclerViewHabits.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = habitAdapter

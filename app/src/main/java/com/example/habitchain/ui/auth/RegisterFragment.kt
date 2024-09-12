@@ -13,6 +13,7 @@ import com.example.habitchain.utils.Constants.ERROR_PASSWORDS_MISMATCH
 import com.example.habitchain.utils.Constants.ERROR_PASSWORD_LENGTH
 import com.example.habitchain.utils.Constants.SUCCESS_REGISTRATION
 import com.google.android.material.snackbar.Snackbar
+import com.example.habitchain.ui.auth.RegistrationState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -56,16 +57,16 @@ class RegisterFragment : Fragment() {
     private fun observeRegistrationState() {
         viewModel.registrationState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is RegisterViewModel.RegistrationState.Success -> {
+                is RegistrationState.Success -> {
                     showMessage(SUCCESS_REGISTRATION)
                     findNavController().navigateUp()
                 }
 
-                is RegisterViewModel.RegistrationState.Error -> {
+                is RegistrationState.Error -> {
                     showErrorMessage(state.message)
                 }
 
-                is RegisterViewModel.RegistrationState.Loading -> {
+                RegistrationState.Loading -> {
                 }
             }
         }

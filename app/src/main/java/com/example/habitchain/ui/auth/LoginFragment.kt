@@ -1,13 +1,10 @@
 package com.example.habitchain.ui.auth
 
-import android.graphics.drawable.Animatable2
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,6 +17,7 @@ import com.example.habitchain.utils.Constants.ERROR_EMPTY_FIELDS
 import com.example.habitchain.utils.Constants.ERROR_INVALID_EMAIL
 import com.example.habitchain.utils.Constants.ERROR_PASSWORD_LENGTH
 import com.google.android.material.snackbar.Snackbar
+import com.example.habitchain.ui.auth.AuthState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +25,10 @@ class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private val viewModel: LoginViewModel by viewModels()
+
+    companion object {
+        const val MIN_PASSWORD_LENGTH = 6
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,20 +81,20 @@ class LoginFragment : Fragment() {
     private fun observeAuthState() {
         viewModel.authenticationState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is LoginViewModel.AuthState.Authenticated -> {
+                is AuthState.Authenticated -> {
                     findNavController().navigate(R.id.action_loginFragment_to_navigation_home)
                 }
 
-                is LoginViewModel.AuthState.Error -> {
+                is AuthState.Error -> {
                     showErrorMessage(state.message)
                     showLoading(false)
                 }
 
-                is LoginViewModel.AuthState.Loading -> {
+                AuthState.Loading -> {
                     showLoading(true)
                 }
 
-                is LoginViewModel.AuthState.Unauthenticated -> {
+                AuthState.Unauthenticated -> {
                     showLoading(false)
                 }
             }
@@ -104,11 +106,11 @@ class LoginFragment : Fragment() {
             showErrorMessage(ERROR_EMPTY_FIELDS)
             return false
         }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches().not()) {
             showErrorMessage(ERROR_INVALID_EMAIL)
             return false
         }
-        if (password.length < 6) {
+        if (password.length < MIN_PASSWORD_LENGTH) {
             showErrorMessage(ERROR_PASSWORD_LENGTH)
             return false
         }

@@ -23,7 +23,7 @@ class SwipeActionCallback(
     private val intrinsicHeight = deleteIcon?.intrinsicHeight ?: 0
     private val background = ColorDrawable()
     private val deleteColor = ContextCompat.getColor(context, R.color.delete)
-    private val editColor = ContextCompat.getColor(context, R.color.light_blue)
+    private val editColor = ContextCompat.getColor(context, R.color.blue)
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
     override fun onMove(

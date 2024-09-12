@@ -3,6 +3,7 @@ package com.example.habitchain.data.local
 import androidx.room.*
 import com.example.habitchain.data.model.Habit
 import com.example.habitchain.data.model.HabitCompletion
+import com.example.habitchain.data.model.DayCompletion
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
@@ -74,8 +75,3 @@ interface HabitDao {
     )
     suspend fun getCompletedHabitsCountForDate(date: Date): Int
 }
-
-data class DayCompletion(
-    @ColumnInfo(name = "day_of_week") val dayOfWeek: Int,
-    @ColumnInfo(name = "completion_count") val completionCount: Int
-)
