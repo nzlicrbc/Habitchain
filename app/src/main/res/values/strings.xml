@@ -35,4 +35,5 @@
     <string name="started_text">Started</string>
     <string name="completed_text">Completed</string>
     <string name="not_done_text">Not Done</string>
+    <string name="add_habit_text">Tap "+" to add a habit.</string>
 </resources>

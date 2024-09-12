@@ -22,25 +22,35 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPagerWeeks"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:layout_marginTop="@dimen/margin_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewToday" />
 
-    <TextView
-        android:id="@+id/textViewQuote"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardViewQuote"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/text_size_small"
-        android:textStyle="italic"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewPagerWeeks" />
+        app:layout_constraintTop_toBottomOf="@+id/viewPagerWeeks">
+
+        <TextView
+            android:id="@+id/textViewQuote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_small"
+            android:textStyle="italic" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/textViewHabits"
@@ -53,7 +63,7 @@
         android:textSize="@dimen/text_size_medium"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewQuote" />
+        app:layout_constraintTop_toBottomOf="@+id/cardViewQuote" />
 
     <TextView
         android:id="@+id/textViewAll"
@@ -82,6 +92,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewHabits"
         tools:listitem="@layout/item_habit" />
+
+    <ImageView
+        android:id="@+id/imageViewHome"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/textViewAddText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHabits"
+        android:src="@drawable/home"/>
+
+    <TextView
+        android:id="@+id/textViewAddText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_marginBottom="@dimen/margin_xxlarge"
+        app:layout_constraintTop_toBottomOf="@id/imageViewHome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        android:text="@string/add_habit_text"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size_medium" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddHabit"

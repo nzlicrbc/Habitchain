@@ -124,7 +124,7 @@ class HomeViewModel @Inject constructor(
                 _quote.value = randomQuote
             } catch (e: Exception) {
                 _error.value = "$ERROR_FETCH_QUOTE: ${e.message}"
-                _quote.value = Quote(ERROR_FETCH_QUOTE, "Error")
+                _quote.value = Quote(ERROR_FETCH_QUOTE, quoteAuthor = "Error")
             }
         }
     }

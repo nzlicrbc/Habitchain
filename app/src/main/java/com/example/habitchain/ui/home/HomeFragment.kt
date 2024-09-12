@@ -152,12 +152,19 @@ class HomeFragment : Fragment() {
     private fun setupObservers() {
         viewModel.habits.observe(viewLifecycleOwner) { habits ->
             habitAdapter.submitList(habits)
-            binding.recyclerViewHabits.visibility =
-                if (habits.isEmpty()) View.GONE else View.VISIBLE
+            if (habits.isEmpty()) {
+                binding.recyclerViewHabits.visibility = View.GONE
+                binding.imageViewHome.visibility = View.VISIBLE
+                binding.textViewAddText.visibility = View.VISIBLE
+            } else {
+                binding.recyclerViewHabits.visibility = View.VISIBLE
+                binding.imageViewHome.visibility = View.GONE
+                binding.textViewAddText.visibility = View.GONE
+            }
         }
 
         viewModel.quote.observe(viewLifecycleOwner) { quote ->
-            binding.textViewQuote.text = "${quote.text} - ${quote.author}"
+            binding.textViewQuote.text = "${quote.quoteText} - ${quote.quoteAuthor}"
         }
 
         viewModel.error.observe(viewLifecycleOwner) { errorMessage ->

@@ -1,11 +1,11 @@
 package com.example.habitchain.data.model
 
 data class Quote(
-    val text: String,
-    val author: String
+    val quoteText: String,
+    val quoteAuthor: String
 )
 
 data class QuoteResponse(
-    val content: String,
-    val author: String
+    val q: String,
+    val a: String
 )

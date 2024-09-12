@@ -56,7 +56,7 @@ object AppModule {
     @Singleton
     fun provideQuoteApiService(okHttpClient: OkHttpClient): QuoteApiService {
         return Retrofit.Builder()
-            .baseUrl(QUOTE_API_BASE_URL)
+            .baseUrl("https://zenquotes.io/api/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
