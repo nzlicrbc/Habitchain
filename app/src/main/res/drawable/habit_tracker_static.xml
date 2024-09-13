@@ -1,0 +1,53 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <path
+        android:name="background"
+        android:fillColor="#9DBDFF"
+        android:pathData="M50,40 L160,40 Q170,40 170,50 L170,150 Q170,160 160,160 L50,160 Q40,160 40,150 L40,50 Q40,40 50,40 Z"/>
+
+    <path
+        android:name="item1"
+        android:fillColor="#7695FF"
+        android:pathData="M55,55 L55,55 Q60,55 60,60 L60,70 Q60,75 55,75 L55,75 Q50,75 50,70 L50,60 Q50,55 55,55 Z"/>
+
+    <path
+        android:name="item2"
+        android:fillColor="#7695FF"
+        android:pathData="M55,90 L55,90 Q60,90 60,95 L60,105 Q60,110 55,110 L55,110 Q50,110 50,105 L50,95 Q50,90 55,90 Z"/>
+
+    <path
+        android:name="item3"
+        android:fillColor="#7695FF"
+        android:pathData="M55,125 L55,125 Q60,125 60,130 L60,140 Q60,145 55,145 L55,145 Q50,145 50,140 L50,130 Q50,125 55,125 Z"/>
+
+    <path
+        android:name="checkmark1"
+        android:pathData="M60 65 l5 5 l10 -10"
+        android:strokeColor="#FF9874"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:trimPathEnd="0"/>
+
+    <path
+        android:name="checkmark2"
+        android:pathData="M60 100 l5 5 l10 -10"
+        android:strokeColor="#FF9874"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:trimPathEnd="0"/>
+
+    <path
+        android:name="checkmark3"
+        android:pathData="M60 135 l5 5 l10 -10"
+        android:strokeColor="#FF9874"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:trimPathEnd="0"/>
+</vector>

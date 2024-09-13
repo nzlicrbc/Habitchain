@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_large">
+
+        <TextView
+            android:id="@+id/textViewCategoryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editTextHabitName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:hint="@string/hint_name"
+            android:inputType="text"
+            app:layout_constraintBottom_toTopOf="@id/textViewCategoryName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewIconColorLabel" />
+
+        <TextView
+            android:id="@+id/textViewIconColorLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:text="@string/icon_amp_color"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTextHabitName" />
+
+        <LinearLayout
+            android:id="@+id/layoutIconColorSelection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/textViewIconColorLabel">
+
+            <LinearLayout
+                android:id="@+id/layoutIconSelection"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/icon"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/textViewSelectedIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:textSize="@dimen/text_size_xlarge" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@android:color/darker_gray" />
+
+            <LinearLayout
+                android:id="@+id/layoutColorSelection"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/color"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:id="@+id/viewSelectedColor"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:background="@drawable/circle_background" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewGoalLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/goal_amp_goal_period_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutIconColorSelection" />
+
+        <LinearLayout
+            android:id="@+id/layoutGoal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/textViewGoalLabel">
+
+            <EditText
+                android:id="@+id/editTextGoal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/edit_text_background"
+                android:inputType="number"
+                android:padding="@dimen/padding_medium" />
+
+            <EditText
+                android:id="@+id/editTextUnit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_weight="1"
+                android:background="@drawable/edit_text_background"
+                android:hint="@string/units_text"
+                android:padding="@dimen/padding_medium" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:text="@string/slash"
+                android:textSize="@dimen/text_size_medium" />
+
+            <Spinner
+                android:id="@+id/spinnerGoalPeriod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupTrackingDays"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutGoal" />
+
+        <TextView
+            android:id="@+id/textViewTrackDuringLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/track_during_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chipGroupTrackingDays" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupTrackDuring"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewTrackDuringLabel" />
+
+        <TextView
+            android:id="@+id/textViewRemindersLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/reminders_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chipGroupTrackDuring" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupReminders"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewRemindersLabel" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fabAddReminder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:backgroundTint="@color/pink"
+            android:text="@string/add_reminder_text"
+            app:icon="@android:drawable/ic_input_add"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chipGroupReminders" />
+
+        <EditText
+            android:id="@+id/editTextReminderMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:hint="@string/reminder_message_text"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fabAddReminder" />
+
+        <Button
+            android:id="@+id/buttonComplete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:backgroundTint="@color/pink"
+            android:text="@string/complete_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextReminderMessage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
