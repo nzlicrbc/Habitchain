@@ -22,6 +22,10 @@ class RegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
     private val viewModel: RegisterViewModel by viewModels()
 
+    companion object {
+        const val MIN_PASSWORD_LENGTH = 6
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -81,7 +85,7 @@ class RegisterFragment : Fragment() {
             showErrorMessage(ERROR_INVALID_EMAIL)
             return false
         }
-        if (password.length < 6) {
+        if (password.length < MIN_PASSWORD_LENGTH) {
             showErrorMessage(ERROR_PASSWORD_LENGTH)
             return false
         }
